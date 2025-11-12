@@ -8,4 +8,4 @@ export type Links = {
     icon?: LucideIcon;
     isActive?: boolean;
   }[];
-};
+}[];
