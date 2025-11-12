@@ -21,34 +21,6 @@ const user = {
   role: "hr",
 };
 
-const hrLinks = [
-  {
-    label: "Essential Links",
-    items: [
-      {
-        title: "Home",
-        url: "/h-r-m/home",
-        icon: Home,
-      },
-      {
-        title: "Employee",
-        url: "/h-r-m/employees",
-        icon: UserRoundPen,
-      },
-    ],
-  },
-  {
-    label: "Register Links",
-    items: [
-      {
-        title: "Employee",
-        url: "/h-r-m/create-employee",
-        icon: Plus,
-      },
-    ],
-  },
-];
-
 type AppSidebarProps = {
   links: Links;
   props?: React.ComponentProps<typeof Sidebar>;
@@ -76,7 +48,7 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({ links, ...props }) => {
         </SidebarMenuButton>
       </SidebarHeader>
       <SidebarContent>
-        {hrLinks.map((link) => (
+        {links.map((link) => (
           <NavMain key={link.label} links={link} />
         ))}
       </SidebarContent>
