@@ -18,7 +18,7 @@ export default function HRManagementLayout({
         },
         {
           title: "Dashboard",
-          url: "/hr-management/dashboard",
+          url: "/hr-management",
           icon: Logs,
         },
         {
