@@ -31,7 +31,7 @@ export default function HRManagementLayout({
   ];
 
   return (
-    <html>
+    <html lang="en">
       <body>
         <MainLayout links={links}>{children}</MainLayout>
       </body>
