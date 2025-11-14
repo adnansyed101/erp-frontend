@@ -4,6 +4,7 @@ import z from "zod";
 
 const EmployeePersonalInformationSchema = z.object({
   fullName: z.string().min(2, "At least 2 characters are needed."),
+  imageUrl: z.string().min(2, "At least 2 characters are needed."),
   officeEmail: z.email().min(2, "Office Email is required"),
   personalEmail: z.email().min(2, "PersonalEmail is required."),
   personalNumber: z.string().min(2, "Personal Phone Number is required."),

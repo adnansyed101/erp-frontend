@@ -37,6 +37,7 @@ const PersonalInformationPage = () => {
     resolver: zodResolver(PersonalInformationSchema),
     defaultValues: {
       personalInformation: {
+        imageUrl: "",
         fullName: "",
         officeEmail: "",
         personalEmail: "",
@@ -79,20 +80,36 @@ const PersonalInformationPage = () => {
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-2 lg:space-y-6"
           >
-            {/* Full Name Input */}
-            <FormField
-              control={form.control}
-              name="personalInformation.fullName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Full Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="John Doe" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Full Name Input */}
+              <FormField
+                control={form.control}
+                name="personalInformation.imageUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Image URL</FormLabel>
+                    <FormControl>
+                      <Input placeholder="johndoe.jpg" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {/* Full Name Input */}
+              <FormField
+                control={form.control}
+                name="personalInformation.fullName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Full Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="John Doe" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
