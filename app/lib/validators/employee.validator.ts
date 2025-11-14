@@ -60,7 +60,7 @@ const SpouseInformationSchema = z
 const BankInformationSchema = z.object({
   bankName: z.string().min(1, "Bank name is required."),
   branchName: z.string().min(1, "Branch name is required."),
-  accountNumber: z.number().min(1, "Bank Account Number is required."),
+  accountNumber: z.string().min(1, "Bank Account Number is required."),
   walletType: z.string().optional(),
   walletNumber: z.string().optional(),
 });
