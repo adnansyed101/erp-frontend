@@ -6,7 +6,7 @@ const PersonalInformationPage = () => {
     {
       title: "Create Employee",
       icon: UserPlus,
-      link: "/hr-management/create-employee",
+      link: "/hr-management/create-employee/personal-information",
     },
     {
       title: "Employee List",
