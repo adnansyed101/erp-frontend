@@ -4,17 +4,13 @@ export default function HRManagementLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
-        <main>
-          <div>
-            <h1 className="text-4xl font-bold text-foreground mb-4">
-              Create Employee
-            </h1>
-            <div>{children}</div>
-          </div>
-        </main>
-      </body>
-    </html>
+    <main>
+      <div>
+        <h1 className="text-4xl font-bold text-foreground mb-4">
+          Create Employee
+        </h1>
+        <div>{children}</div>
+      </div>
+    </main>
   );
 }
