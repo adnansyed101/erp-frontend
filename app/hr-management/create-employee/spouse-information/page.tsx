@@ -24,6 +24,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { useEmployeeDataStore } from "@/app/store";
 
 const SpouseInformationSchema = EmployeeSchema.pick({
   spouseInformation: true,
@@ -32,6 +34,8 @@ const SpouseInformationSchema = EmployeeSchema.pick({
 type SpouseInformation = z.infer<typeof SpouseInformationSchema>;
 
 const SpouseInformationPage = () => {
+  const router = useRouter();
+
   const form = useForm<SpouseInformation>({
     resolver: zodResolver(SpouseInformationSchema),
     defaultValues: {
@@ -47,8 +51,12 @@ const SpouseInformationPage = () => {
     },
   });
 
+  const setEmployeeData = useEmployeeDataStore((state) => state.setData);
+
   const onSubmit = (data: SpouseInformation) => {
-    console.log(data);
+    setEmployeeData(data);
+
+    return router.push("/hr-management/create-employee/bank-information");
   };
 
   return (

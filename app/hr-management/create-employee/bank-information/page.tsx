@@ -24,6 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { useEmployeeDataStore } from "@/app/store";
 
 const BankInformationSchema = EmployeeSchema.pick({
   bankInformation: true,
@@ -45,8 +46,25 @@ const BankInformationPage = () => {
     },
   });
 
+  const personalInformation = useEmployeeDataStore(
+    (state) => state.personalInformation
+  );
+  const permanentAddress = useEmployeeDataStore(
+    (state) => state.permanentAddress
+  );
+  const presentAdress = useEmployeeDataStore((state) => state.presentAddress);
+  const spouseInformation = useEmployeeDataStore(
+    (state) => state.spouseInformation
+  );
+
   const onSubmit = (data: BankInformation) => {
-    console.log(data);
+    console.log({
+      ...data,
+      personalInformation,
+      permanentAddress,
+      presentAdress,
+      spouseInformation,
+    });
   };
 
   return (
@@ -94,12 +112,7 @@ const BankInformationPage = () => {
                   <FormItem>
                     <FormLabel>Account Number</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Account Number"
-                        type="number"
-                        {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                      />
+                      <Input placeholder="Account Number" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

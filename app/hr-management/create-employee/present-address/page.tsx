@@ -16,6 +16,8 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import CreateEmployeeSteps from "../component/create-employee-steps";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { useEmployeeDataStore } from "@/app/store";
 
 const PresentAddressSchema = EmployeeSchema.pick({
   presentAddress: true,
@@ -24,6 +26,7 @@ const PresentAddressSchema = EmployeeSchema.pick({
 type PresentAddress = z.infer<typeof PresentAddressSchema>;
 
 const PresentAddressPage = () => {
+  const router = useRouter();
   const form = useForm<PresentAddress>({
     resolver: zodResolver(PresentAddressSchema),
     defaultValues: {
@@ -40,8 +43,12 @@ const PresentAddressPage = () => {
     },
   });
 
+  const setEmployeeData = useEmployeeDataStore((state) => state.setData);
+
   const onSubmit = (data: PresentAddress) => {
-    console.log(data);
+    setEmployeeData(data);
+
+    return router.push("/hr-management/create-employee/spouse-information");
   };
 
   return (

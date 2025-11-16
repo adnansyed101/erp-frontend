@@ -25,6 +25,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import CreateEmployeeSteps from "../component/create-employee-steps";
+import { useRouter } from "next/navigation";
+import { useEmployeeDataStore } from "@/app/store";
 
 const PersonalInformationSchema = EmployeeSchema.pick({
   personalInformation: true,
@@ -33,6 +35,9 @@ const PersonalInformationSchema = EmployeeSchema.pick({
 type PersonalInformation = z.infer<typeof PersonalInformationSchema>;
 
 const PersonalInformationPage = () => {
+  const router = useRouter();
+
+  // Form Data
   const form = useForm<PersonalInformation>({
     resolver: zodResolver(PersonalInformationSchema),
     defaultValues: {
@@ -67,8 +72,11 @@ const PersonalInformationPage = () => {
     },
   });
 
+  const setEmployeeData = useEmployeeDataStore((state) => state.setData);
+
   const onSubmit = (data: PersonalInformation) => {
-    console.log(data);
+    setEmployeeData(data);
+    return router.push("/hr-management/create-employee/permanent-address");
   };
 
   return (

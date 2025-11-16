@@ -17,6 +17,8 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import CreateEmployeeSteps from "../component/create-employee-steps";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { useEmployeeDataStore } from "@/app/store";
 
 const PermanentAddressSchema = EmployeeSchema.pick({
   permanentAddress: true,
@@ -25,6 +27,8 @@ const PermanentAddressSchema = EmployeeSchema.pick({
 type PermanentAddress = z.infer<typeof PermanentAddressSchema>;
 
 const PermanentAddressPage = () => {
+  const router = useRouter();
+
   const form = useForm<PermanentAddress>({
     resolver: zodResolver(PermanentAddressSchema),
     defaultValues: {
@@ -41,8 +45,11 @@ const PermanentAddressPage = () => {
     },
   });
 
+  const setEmployeeData = useEmployeeDataStore((state) => state.setData);
+
   const onSubmit = (data: PermanentAddress) => {
-    console.log(data);
+    setEmployeeData(data);
+    return router.push("/hr-management/create-employee/present-address");
   };
 
   return (
