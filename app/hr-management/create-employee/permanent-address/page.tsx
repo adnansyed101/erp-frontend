@@ -28,19 +28,20 @@ type PermanentAddress = z.infer<typeof PermanentAddressSchema>;
 
 const PermanentAddressPage = () => {
   const router = useRouter();
+  const employeeData = useEmployeeDataStore((state) => state.presentAddress);
 
   const form = useForm<PermanentAddress>({
     resolver: zodResolver(PermanentAddressSchema),
     defaultValues: {
       permanentAddress: {
-        division: "",
-        district: "",
-        upazilaOrThana: "",
-        postOffice: "",
-        postCode: "",
-        block: "",
-        houseNoOrVillage: "",
-        roadNo: "",
+        division: employeeData?.division || "",
+        district: employeeData?.district || "",
+        upazilaOrThana: employeeData?.upazilaOrThana || "",
+        postOffice: employeeData?.postOffice || "",
+        postCode: employeeData?.postCode || "",
+        block: employeeData?.block || "",
+        houseNoOrVillage: employeeData?.houseNoOrVillage || "",
+        roadNo: employeeData?.roadNo || "",
       },
     },
   });

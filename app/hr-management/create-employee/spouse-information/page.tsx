@@ -41,7 +41,7 @@ const SpouseInformationPage = () => {
     defaultValues: {
       spouseInformation: {
         fullName: "",
-        dateOfBirth: "",
+        dateOfBirth: new Date(),
         gender: "",
         occupation: "",
         nid: "",
@@ -94,7 +94,18 @@ const SpouseInformationPage = () => {
                   <FormItem>
                     <FormLabel>Date of Birth</FormLabel>
                     <FormControl>
-                      <Input type="date" {...field} value={field.value || ""} />
+                      <Input
+                        type="date"
+                        {...field}
+                        value={
+                          field.value
+                            ? new Date(field.value).toISOString().split("T")[0]
+                            : ""
+                        }
+                        onChange={(e) =>
+                          field.onChange(new Date(e.target.value))
+                        }
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

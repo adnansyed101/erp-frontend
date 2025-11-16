@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useEmployeeDataStore } from "@/app/store";
+import { toast } from "sonner";
 
 const BankInformationSchema = EmployeeSchema.pick({
   bankInformation: true,
@@ -33,19 +34,6 @@ const BankInformationSchema = EmployeeSchema.pick({
 type BankInformation = z.infer<typeof BankInformationSchema>;
 
 const BankInformationPage = () => {
-  const form = useForm<BankInformation>({
-    resolver: zodResolver(BankInformationSchema),
-    defaultValues: {
-      bankInformation: {
-        bankName: "",
-        branchName: "",
-        accountNumber: "",
-        walletType: "",
-        walletNumber: "",
-      },
-    },
-  });
-
   const personalInformation = useEmployeeDataStore(
     (state) => state.personalInformation
   );
@@ -56,6 +44,22 @@ const BankInformationPage = () => {
   const spouseInformation = useEmployeeDataStore(
     (state) => state.spouseInformation
   );
+  const bankInformation = useEmployeeDataStore(
+    (state) => state.bankInformation
+  );
+
+  const form = useForm<BankInformation>({
+    resolver: zodResolver(BankInformationSchema),
+    defaultValues: {
+      bankInformation: {
+        bankName: bankInformation?.bankName || "",
+        branchName: bankInformation?.branchName || "",
+        accountNumber: bankInformation?.accountNumber || "",
+        walletType: bankInformation?.walletType || "",
+        walletNumber: bankInformation?.walletNumber || "",
+      },
+    },
+  });
 
   const onSubmit = (data: BankInformation) => {
     console.log({
@@ -65,6 +69,11 @@ const BankInformationPage = () => {
       presentAdress,
       spouseInformation,
     });
+
+    // TO clear zod state.
+    useEmployeeDataStore.setState(useEmployeeDataStore.getInitialState(), true);
+    // To clear the persisted data:
+    useEmployeeDataStore.persist.clearStorage();
   };
 
   return (
@@ -162,7 +171,23 @@ const BankInformationPage = () => {
               />
             </div>
 
-            <Button type="submit">Submit</Button>
+            <div className="space-x-2">
+              <Button type="submit">Submit</Button>
+              <Button
+                type="button"
+                variant="destructive"
+                onClick={() => {
+                  useEmployeeDataStore.persist.clearStorage();
+                  useEmployeeDataStore.setState(
+                    useEmployeeDataStore.getInitialState(),
+                    true
+                  );
+                  return toast.success("Data is cleared.");
+                }}
+              >
+                Reset
+              </Button>
+            </div>
           </form>
         </Form>
       </Card>

@@ -27,23 +27,24 @@ type PresentAddress = z.infer<typeof PresentAddressSchema>;
 
 const PresentAddressPage = () => {
   const router = useRouter();
+  const employeeData = useEmployeeDataStore((state) => state.presentAddress);
+  const setEmployeeData = useEmployeeDataStore((state) => state.setData);
+
   const form = useForm<PresentAddress>({
     resolver: zodResolver(PresentAddressSchema),
     defaultValues: {
       presentAddress: {
-        division: "",
-        district: "",
-        upazilaOrThana: "",
-        postOffice: "",
-        postCode: "",
-        block: "",
-        houseNoOrVillage: "",
-        roadNo: "",
+        division: employeeData?.division || "",
+        district: employeeData?.district || "",
+        upazilaOrThana: employeeData?.upazilaOrThana || "",
+        postOffice: employeeData?.postOffice || "",
+        postCode: employeeData?.postCode || "",
+        block: employeeData?.block || "",
+        houseNoOrVillage: employeeData?.houseNoOrVillage || "",
+        roadNo: employeeData?.roadNo || "",
       },
     },
   });
-
-  const setEmployeeData = useEmployeeDataStore((state) => state.setData);
 
   const onSubmit = (data: PresentAddress) => {
     setEmployeeData(data);

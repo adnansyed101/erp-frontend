@@ -36,43 +36,45 @@ type PersonalInformation = z.infer<typeof PersonalInformationSchema>;
 
 const PersonalInformationPage = () => {
   const router = useRouter();
+  const employeeData = useEmployeeDataStore(
+    (state) => state.personalInformation
+  );
+  const setEmployeeData = useEmployeeDataStore((state) => state.setData);
 
   // Form Data
   const form = useForm<PersonalInformation>({
     resolver: zodResolver(PersonalInformationSchema),
     defaultValues: {
       personalInformation: {
-        imageUrl: "",
-        fullName: "",
-        officeEmail: "",
-        personalEmail: "",
-        personalNumber: "",
-        officeNumber: "",
-        employeeType: "",
-        employeeStatus: "",
-        nationality: "",
-        disability: false,
-        gender: "Male",
-        religion: "",
-        joiningDesignation: "",
-        currentDesignation: "",
-        dateOfBirth: new Date(),
-        dateOfConfirmation: new Date(),
-        fatherName: "",
-        motherName: "",
-        nationalId: "",
-        placeOfBirth: "",
-        maritalStatus: "Single",
-        eTIN: "",
-        program: "",
-        unit: "",
-        prlDate: new Date(),
-        dateofRegularity: "",
+        imageUrl: employeeData?.imageUrl || "",
+        fullName: employeeData?.fullName || "",
+        officeEmail: employeeData?.officeEmail || "",
+        personalEmail: employeeData?.personalEmail || "",
+        personalNumber: employeeData?.personalNumber || "",
+        officeNumber: employeeData?.officeNumber || "",
+        employeeType: employeeData?.employeeType || "",
+        employeeStatus: employeeData?.employeeStatus || "",
+        nationality: employeeData?.nationality || "",
+        disability: employeeData?.disability || false,
+        gender: employeeData?.gender || "Male",
+        religion: employeeData?.religion || "",
+        joiningDesignation: employeeData?.joiningDesignation || "",
+        currentDesignation: employeeData?.currentDesignation || "",
+        dateOfBirth: employeeData?.dateOfBirth || new Date(),
+        dateOfConfirmation: employeeData?.dateOfConfirmation || new Date(),
+        fatherName: employeeData?.fatherName || "",
+        motherName: employeeData?.motherName || "",
+        nationalId: employeeData?.nationalId || "",
+        placeOfBirth: employeeData?.placeOfBirth || "",
+        maritalStatus: employeeData?.maritalStatus || "Single",
+        eTIN: employeeData?.eTIN || "",
+        program: employeeData?.program || "",
+        unit: employeeData?.unit || "",
+        prlDate: employeeData?.prlDate || new Date(),
+        dateofRegularity: employeeData?.dateofRegularity || "",
       },
     },
   });
-
-  const setEmployeeData = useEmployeeDataStore((state) => state.setData);
 
   const onSubmit = (data: PersonalInformation) => {
     setEmployeeData(data);
