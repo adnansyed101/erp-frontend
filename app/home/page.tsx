@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import ActivityCard from "./components/activity-card";
 import MainLayout from "../provider/MainLayout";
-import { Links } from "../lib/types/types";
+import { Links } from "@/lib/types/types"; 
 
 const activities = [
   {
@@ -129,7 +129,7 @@ export default function HomePage() {
         },
       ],
     },
-      {
+    {
       label: "Extras",
       items: [
         {

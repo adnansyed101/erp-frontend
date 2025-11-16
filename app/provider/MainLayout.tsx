@@ -5,7 +5,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { ReactNode } from "react";
-import { Links } from "../lib/types/types";
+import { Links } from "../../lib/types/types";
 
 const MainLayout = ({
   children,

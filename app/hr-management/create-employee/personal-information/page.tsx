@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
-import { EmployeeSchema } from "@/app/lib/validators/employee.validator";
+import { EmployeeSchema } from "@/lib/validators/employee.validator";
 import {
   Form,
   FormControl,

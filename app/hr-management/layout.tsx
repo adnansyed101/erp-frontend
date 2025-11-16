@@ -1,5 +1,5 @@
 import { Home, Logs, User } from "lucide-react";
-import { Links } from "../lib/types/types";
+import { Links } from "@/lib/types/types"; 
 import MainLayout from "../provider/MainLayout";
 
 export default function HRManagementLayout({
