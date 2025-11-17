@@ -63,6 +63,7 @@ const BankInformationSchema = z.object({
 });
 
 export const EmployeeSchema = z.object({
+  id: z.string().optional(),
   ...EmployeePersonalInformationSchema.shape,
   ...BankInformationSchema.shape,
   spouseInformation: SpouseInformationSchema,
@@ -77,4 +78,3 @@ export const EmployeeSchema = z.object({
 //   spouseInformation: SpouseInformationSchema,
 //   bankInformation: BankInformationSchema,
 // });
-
