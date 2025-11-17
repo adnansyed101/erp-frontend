@@ -28,9 +28,11 @@ import { EmployeeDataState, useEmployeeDataStore } from "@/app/store";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Employee } from "@/lib/types/types";
+import { useRouter } from "next/navigation";
 
 const BankInformationPage = () => {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const { mutate } = useMutation({
     mutationKey: ["employees"],
@@ -76,14 +78,10 @@ const BankInformationPage = () => {
 
   const onSubmit = (data: Partial<Employee>) => {
     employeeInformation.setData(data);
-
-    console.log({ ...employeeInformation, ...data });
-
     mutate({ ...employeeInformation, ...data });
-
     useEmployeeDataStore.setState(useEmployeeDataStore.getInitialState(), true);
-
     useEmployeeDataStore.persist.clearStorage();
+    router.push("/hr-management/employee-list");
   };
 
   return (
