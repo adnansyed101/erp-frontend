@@ -27,10 +27,7 @@ const EmployeeListPage = () => {
 
       return response.json();
     },
-    // initialData: { success: false, message: "fetching data", data: [] },
   });
-
-  console.log(employees);
 
   if (error) return "An error has occurred: " + error.message;
 
