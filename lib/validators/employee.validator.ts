@@ -19,7 +19,7 @@ const EmployeePersonalInformationSchema = z.object({
   currentDesignation: z.string().min(1, "Current Designation is required"),
   dateOfBirth: z.date(),
   dateOfConfirmation: z.date(),
-  fatherName: z.string().optional(),
+  fatherName: z.string().nullable().optional(),
   motherName: z.string().optional(),
   nationalId: z.string().optional(),
   placeOfBirth: z.string().optional(),
@@ -33,30 +33,26 @@ const EmployeePersonalInformationSchema = z.object({
   dateofRegularity: z.string().optional(),
 });
 
-const PresentAddressSchema = z.object({
+const AddressSchema = z.object({
   division: z.string().min(1, "Division is required."),
   district: z.string().min(1, "District is required."),
   upazilaOrThana: z.string().min(1, "Upazila is required"),
   postOffice: z.string().min(1, "Post Office is required."),
   postCode: z.string().min(1, "Post Code is required."),
-  block: z.string().min(1, "Block is required.").optional(),
   houseNoOrVillage: z.string().min(1, "House No./Village is required."),
+  block: z.string().min(1, "Block is required."),
   roadNo: z.string().optional(),
 });
 
-const PermanentAddressSchema = PresentAddressSchema;
-
-const SpouseInformationSchema = z
-  .object({
-    fullName: z.string(),
-    dateOfBirth: z.date(),
-    gender: z.string(),
-    occupation: z.string(),
-    nid: z.string(),
-    mobileNumber: z.string(),
-    email: z.email(),
-  })
-  .optional();
+const SpouseInformationSchema = z.object({
+  fullName: z.string(),
+  dateOfBirth: z.date(),
+  gender: z.string(),
+  occupation: z.string(),
+  nid: z.string(),
+  mobileNumber: z.string(),
+  email: z.email(),
+});
 
 const BankInformationSchema = z.object({
   bankName: z.string().min(1, "Bank name is required."),
@@ -67,9 +63,18 @@ const BankInformationSchema = z.object({
 });
 
 export const EmployeeSchema = z.object({
-  personalInformation: EmployeePersonalInformationSchema,
-  presentAddress: PresentAddressSchema,
-  permanentAddress: PermanentAddressSchema,
+  ...EmployeePersonalInformationSchema.shape,
+  ...BankInformationSchema.shape,
   spouseInformation: SpouseInformationSchema,
-  bankInformation: BankInformationSchema,
+  presentAddress: AddressSchema,
+  permanentAddress: AddressSchema,
 });
+
+// z.object({
+//   personalInformation: EmployeePersonalInformationSchema,
+//   permanentAddress: AddressSchema,
+//   presentAddress: AddressSchema,
+//   spouseInformation: SpouseInformationSchema,
+//   bankInformation: BankInformationSchema,
+// });
+
