@@ -54,7 +54,7 @@ const BankInformationPage = () => {
     onSuccess: () => {
       // Invalidate and refetch queries after a successful mutation
       queryClient.invalidateQueries({ queryKey: ["employees"] });
-      alert("Post created successfully!");
+      toast.success("Employee created");
     },
     onError: (error) => {
       alert(`Error creating post: ${error.message}`);
