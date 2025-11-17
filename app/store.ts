@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { Employee } from "@/lib/types/types";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-type EmployeeDataState = Partial<Employee> & {
+export type EmployeeDataState = Partial<Employee> & {
   setData: (data: Partial<Employee>) => void;
 };
 
