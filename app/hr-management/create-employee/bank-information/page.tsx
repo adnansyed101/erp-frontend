@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useEffect } from "react";
 import z from "zod";
 import { EmployeeSchema } from "@/lib/validators/employee.validator";
 import {
@@ -24,55 +24,65 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { useEmployeeDataStore } from "@/app/store";
+import { EmployeeDataState, useEmployeeDataStore } from "@/app/store";
 import { toast } from "sonner";
-
-const BankInformationSchema = EmployeeSchema.pick({
-  bankInformation: true,
-});
-
-type BankInformation = z.infer<typeof BankInformationSchema>;
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Employee } from "@/lib/types/types";
 
 const BankInformationPage = () => {
-  const personalInformation = useEmployeeDataStore(
-    (state) => state.personalInformation
-  );
-  const permanentAddress = useEmployeeDataStore(
-    (state) => state.permanentAddress
-  );
-  const presentAdress = useEmployeeDataStore((state) => state.presentAddress);
-  const spouseInformation = useEmployeeDataStore(
-    (state) => state.spouseInformation
-  );
-  const bankInformation = useEmployeeDataStore(
-    (state) => state.bankInformation
-  );
+  const queryClient = useQueryClient();
 
-  const form = useForm<BankInformation>({
-    resolver: zodResolver(BankInformationSchema),
-    defaultValues: {
-      bankInformation: {
-        bankName: bankInformation?.bankName || "",
-        branchName: bankInformation?.branchName || "",
-        accountNumber: bankInformation?.accountNumber || "",
-        walletType: bankInformation?.walletType || "",
-        walletNumber: bankInformation?.walletNumber || "",
-      },
+  const { mutate } = useMutation({
+    mutationKey: ["employees"],
+    mutationFn: async (newEmployee: Omit<EmployeeDataState, "setState">) => {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/hr-management/create-employee`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newEmployee),
+        }
+      );
+      if (!response.ok) {
+        return console.log("Error occured in creating employee.");
+      }
+
+      return response;
+    },
+    onSuccess: () => {
+      // Invalidate and refetch queries after a successful mutation
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+      alert("Post created successfully!");
+    },
+    onError: (error) => {
+      alert(`Error creating post: ${error.message}`);
     },
   });
 
-  const onSubmit = (data: BankInformation) => {
-    console.log({
-      ...data,
-      personalInformation,
-      permanentAddress,
-      presentAdress,
-      spouseInformation,
-    });
+  const employeeInformation = useEmployeeDataStore((state) => state);
 
-    // TO clear zod state.
+  const form = useForm<Partial<Employee>>({
+    resolver: zodResolver(EmployeeSchema.partial()),
+    defaultValues: {
+      bankName: employeeInformation.bankName || "",
+      branchName: employeeInformation.branchName || "",
+      accountNumber: employeeInformation.accountNumber || "",
+      walletType: employeeInformation.walletType || "",
+      walletNumber: employeeInformation.walletNumber || "",
+    },
+  });
+
+  const onSubmit = (data: Partial<Employee>) => {
+    employeeInformation.setData(data);
+
+    console.log({ ...employeeInformation, ...data });
+
+    mutate({ ...employeeInformation, ...data });
+
     useEmployeeDataStore.setState(useEmployeeDataStore.getInitialState(), true);
-    // To clear the persisted data:
+
     useEmployeeDataStore.persist.clearStorage();
   };
 
@@ -82,12 +92,12 @@ const BankInformationPage = () => {
       <Card className="px-4 flex-1">
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(onSubmit, (e) => console.log(e))}
             className="space-y-2 lg:space-y-6"
           >
             <FormField
               control={form.control}
-              name="bankInformation.bankName"
+              name="bankName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Bank Name</FormLabel>
@@ -102,7 +112,7 @@ const BankInformationPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="bankInformation.branchName"
+                name="branchName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Branch Name</FormLabel>
@@ -116,7 +126,7 @@ const BankInformationPage = () => {
 
               <FormField
                 control={form.control}
-                name="bankInformation.accountNumber"
+                name="accountNumber"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Account Number</FormLabel>
@@ -132,7 +142,7 @@ const BankInformationPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="bankInformation.walletType"
+                name="walletType"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Wallet Type (Optional)</FormLabel>
@@ -158,7 +168,7 @@ const BankInformationPage = () => {
 
               <FormField
                 control={form.control}
-                name="bankInformation.walletNumber"
+                name="walletNumber"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Wallet Number (Optional)</FormLabel>
