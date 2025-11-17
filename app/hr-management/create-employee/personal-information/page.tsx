@@ -3,8 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
-import z from "zod";
-import { EmployeeSchema } from "@/lib/validators/employee.validator";
 import {
   Form,
   FormControl,
@@ -27,56 +25,46 @@ import { Card } from "@/components/ui/card";
 import CreateEmployeeSteps from "../component/create-employee-steps";
 import { useRouter } from "next/navigation";
 import { useEmployeeDataStore } from "@/app/store";
-
-const PersonalInformationSchema = EmployeeSchema.pick({
-  personalInformation: true,
-});
-
-type PersonalInformation = z.infer<typeof PersonalInformationSchema>;
+import { EmployeeSchema } from "@/lib/validators/employee.validator";
+import type { Employee } from "@/lib/types/types.ts";
 
 const PersonalInformationPage = () => {
   const router = useRouter();
-  const employeeData = useEmployeeDataStore(
-    (state) => state.personalInformation
-  );
+  const employeeData = useEmployeeDataStore((state) => state);
   const setEmployeeData = useEmployeeDataStore((state) => state.setData);
 
   // Form Data
-  const form = useForm<PersonalInformation>({
-    resolver: zodResolver(PersonalInformationSchema),
+  const form = useForm<Partial<Employee>>({
+    resolver: zodResolver(EmployeeSchema.partial()),
     defaultValues: {
-      personalInformation: {
-        imageUrl: employeeData?.imageUrl || "",
-        fullName: employeeData?.fullName || "",
-        officeEmail: employeeData?.officeEmail || "",
-        personalEmail: employeeData?.personalEmail || "",
-        personalNumber: employeeData?.personalNumber || "",
-        officeNumber: employeeData?.officeNumber || "",
-        employeeType: employeeData?.employeeType || "",
-        employeeStatus: employeeData?.employeeStatus || "",
-        nationality: employeeData?.nationality || "",
-        disability: employeeData?.disability || false,
-        gender: employeeData?.gender || "Male",
-        religion: employeeData?.religion || "",
-        joiningDesignation: employeeData?.joiningDesignation || "",
-        currentDesignation: employeeData?.currentDesignation || "",
-        dateOfBirth: employeeData?.dateOfBirth || new Date(),
-        dateOfConfirmation: employeeData?.dateOfConfirmation || new Date(),
-        fatherName: employeeData?.fatherName || "",
-        motherName: employeeData?.motherName || "",
-        nationalId: employeeData?.nationalId || "",
-        placeOfBirth: employeeData?.placeOfBirth || "",
-        maritalStatus: employeeData?.maritalStatus || "Single",
-        eTIN: employeeData?.eTIN || "",
-        program: employeeData?.program || "",
-        unit: employeeData?.unit || "",
-        prlDate: employeeData?.prlDate || new Date(),
-        dateofRegularity: employeeData?.dateofRegularity || "",
-      },
+      imageUrl: employeeData.imageUrl || "",
+      fullName: employeeData.fullName || "",
+      officeEmail: employeeData.officeEmail || "",
+      personalEmail: employeeData.personalEmail || "",
+      personalNumber: employeeData.personalNumber || "",
+      officeNumber: employeeData.officeNumber || "",
+      employeeType: employeeData.employeeType || "",
+      employeeStatus: employeeData.employeeStatus || "",
+      nationality: employeeData.nationality || "",
+      disability: employeeData.disability || false,
+      gender: employeeData.gender || "Male",
+      religion: employeeData.religion || "",
+      joiningDesignation: employeeData.joiningDesignation || "",
+      currentDesignation: employeeData.currentDesignation || "",
+      dateOfBirth: employeeData.dateOfBirth || new Date(),
+      dateOfConfirmation: employeeData.dateOfConfirmation || new Date(),
+      fatherName: employeeData.fatherName || "",
+      motherName: employeeData.motherName || "",
+      nationalId: employeeData.nationalId || "",
+      placeOfBirth: employeeData.placeOfBirth || "",
+      maritalStatus: employeeData.maritalStatus || "Single",
+      eTIN: employeeData.eTIN || "",
+      program: employeeData.program || "",
+      unit: employeeData.unit || "",
     },
   });
 
-  const onSubmit = (data: PersonalInformation) => {
+  const onSubmit = (data: Partial<Employee>) => {
     setEmployeeData(data);
     return router.push("/hr-management/create-employee/permanent-address");
   };
@@ -87,14 +75,14 @@ const PersonalInformationPage = () => {
       <Card className="px-4 flex-1">
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(onSubmit, (e) => console.log(e))}
             className="space-y-2 lg:space-y-6"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Full Name Input */}
               <FormField
                 control={form.control}
-                name="personalInformation.imageUrl"
+                name="imageUrl"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Image URL</FormLabel>
@@ -108,7 +96,7 @@ const PersonalInformationPage = () => {
               {/* Full Name Input */}
               <FormField
                 control={form.control}
-                name="personalInformation.fullName"
+                name="fullName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Full Name</FormLabel>
@@ -123,7 +111,7 @@ const PersonalInformationPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="personalInformation.officeEmail"
+                name="officeEmail"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Office Email</FormLabel>
@@ -141,7 +129,7 @@ const PersonalInformationPage = () => {
 
               <FormField
                 control={form.control}
-                name="personalInformation.personalEmail"
+                name="personalEmail"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Personal Email</FormLabel>
@@ -160,7 +148,7 @@ const PersonalInformationPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="personalInformation.officeNumber"
+                name="officeNumber"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Office Phone Number</FormLabel>
@@ -174,7 +162,7 @@ const PersonalInformationPage = () => {
 
               <FormField
                 control={form.control}
-                name="personalInformation.personalNumber"
+                name="personalNumber"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Personal Phone Number</FormLabel>
@@ -189,7 +177,7 @@ const PersonalInformationPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <FormField
                 control={form.control}
-                name="personalInformation.employeeType"
+                name="employeeType"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Employee Type</FormLabel>
@@ -215,7 +203,7 @@ const PersonalInformationPage = () => {
 
               <FormField
                 control={form.control}
-                name="personalInformation.employeeStatus"
+                name="employeeStatus"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Employee Status</FormLabel>
@@ -240,7 +228,7 @@ const PersonalInformationPage = () => {
               />
               <FormField
                 control={form.control}
-                name="personalInformation.gender"
+                name="gender"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Gender</FormLabel>
@@ -267,7 +255,7 @@ const PersonalInformationPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="personalInformation.nationality"
+                name="nationality"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Nationality</FormLabel>
@@ -280,7 +268,7 @@ const PersonalInformationPage = () => {
               />
               <FormField
                 control={form.control}
-                name="personalInformation.religion"
+                name="religion"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Religion</FormLabel>
@@ -312,7 +300,7 @@ const PersonalInformationPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="personalInformation.joiningDesignation"
+                name="joiningDesignation"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Joining Designation</FormLabel>
@@ -325,7 +313,7 @@ const PersonalInformationPage = () => {
               />
               <FormField
                 control={form.control}
-                name="personalInformation.currentDesignation"
+                name="currentDesignation"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Current Designation</FormLabel>
@@ -341,7 +329,7 @@ const PersonalInformationPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="personalInformation.dateOfBirth"
+                name="dateOfBirth"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Date of Birth</FormLabel>
@@ -366,7 +354,7 @@ const PersonalInformationPage = () => {
 
               <FormField
                 control={form.control}
-                name="personalInformation.dateOfConfirmation"
+                name="dateOfConfirmation"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Date of Confirmation</FormLabel>
@@ -392,7 +380,7 @@ const PersonalInformationPage = () => {
 
             <FormField
               control={form.control}
-              name="personalInformation.disability"
+              name="disability"
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center space-x-3 space-y-0">
                   <FormControl>

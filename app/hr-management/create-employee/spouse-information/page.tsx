@@ -26,35 +26,30 @@ import {
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useEmployeeDataStore } from "@/app/store";
-
-const SpouseInformationSchema = EmployeeSchema.pick({
-  spouseInformation: true,
-});
-
-type SpouseInformation = z.infer<typeof SpouseInformationSchema>;
+import { Employee } from "@/lib/types/types";
 
 const SpouseInformationPage = () => {
   const router = useRouter();
 
-  const form = useForm<SpouseInformation>({
-    resolver: zodResolver(SpouseInformationSchema),
+  const employeeData = useEmployeeDataStore((state) => state);
+
+  const form = useForm<Partial<Employee>>({
+    resolver: zodResolver(EmployeeSchema.partial()),
     defaultValues: {
       spouseInformation: {
-        fullName: "",
-        dateOfBirth: new Date(),
-        gender: "",
-        occupation: "",
-        nid: "",
-        mobileNumber: "",
-        email: "",
+        fullName: employeeData.spouseInformation?.fullName || "",
+        dateOfBirth: employeeData.spouseInformation?.dateOfBirth || new Date(),
+        gender: employeeData.spouseInformation?.gender || "",
+        occupation: employeeData.spouseInformation?.occupation || "",
+        nid: employeeData.spouseInformation?.nid || "",
+        mobileNumber: employeeData.spouseInformation?.mobileNumber || "",
+        email: employeeData.spouseInformation?.email || "",
       },
     },
   });
 
-  const setEmployeeData = useEmployeeDataStore((state) => state.setData);
-
-  const onSubmit = (data: SpouseInformation) => {
-    setEmployeeData(data);
+  const onSubmit = (data: Partial<Employee>) => {
+    employeeData.setData(data);
 
     return router.push("/hr-management/create-employee/bank-information");
   };

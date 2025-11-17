@@ -18,20 +18,15 @@ import CreateEmployeeSteps from "../component/create-employee-steps";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useEmployeeDataStore } from "@/app/store";
-
-const PresentAddressSchema = EmployeeSchema.pick({
-  presentAddress: true,
-});
-
-type PresentAddress = z.infer<typeof PresentAddressSchema>;
+import { Employee } from "@/lib/types/types";
 
 const PresentAddressPage = () => {
   const router = useRouter();
   const employeeData = useEmployeeDataStore((state) => state.presentAddress);
   const setEmployeeData = useEmployeeDataStore((state) => state.setData);
 
-  const form = useForm<PresentAddress>({
-    resolver: zodResolver(PresentAddressSchema),
+  const form = useForm<Partial<Employee>>({
+    resolver: zodResolver(EmployeeSchema.partial()),
     defaultValues: {
       presentAddress: {
         division: employeeData?.division || "",
@@ -46,7 +41,18 @@ const PresentAddressPage = () => {
     },
   });
 
-  const onSubmit = (data: PresentAddress) => {
+  const onSubmit = (data: Partial<Employee>) => {
+    form.trigger([
+      "presentAddress.division",
+      "presentAddress.district",
+      "presentAddress.upazilaOrThana",
+      "presentAddress.postOffice",
+      "presentAddress.postCode",
+      "presentAddress.block",
+      "presentAddress.houseNoOrVillage",
+      "presentAddress.roadNo",
+    ]);
+
     setEmployeeData(data);
 
     return router.push("/hr-management/create-employee/spouse-information");
@@ -58,7 +64,7 @@ const PresentAddressPage = () => {
       <Card className="px-4 flex-1">
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(onSubmit, (e) => console.log(e))}
             className="space-y-2 lg:space-y-6"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
