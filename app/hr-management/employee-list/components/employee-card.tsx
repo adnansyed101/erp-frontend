@@ -64,7 +64,7 @@ export function EmployeeCard({
 
         {/* Details Button */}
         <Button className="w-full mt-6" asChild>
-          <Link href={`hr-management/employee-list/${id}`}>Show Details</Link>
+          <Link href={`/hr-management/employee-list/${id}`}>Show Details</Link>
         </Button>
       </CardContent>
     </Card>
