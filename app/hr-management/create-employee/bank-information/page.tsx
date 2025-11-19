@@ -86,7 +86,7 @@ const BankInformationPage = () => {
 
   return (
     <div className="flex flex-col md:flex-row gap-2">
-      <CreateEmployeeSteps current={4} />
+      <CreateEmployeeSteps current={6} />
       <Card className="px-4 flex-1">
         <Form {...form}>
           <form

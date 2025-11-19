@@ -60,7 +60,7 @@ const PresentAddressPage = () => {
 
   return (
     <div className="flex flex-col md:flex-row gap-2">
-      <CreateEmployeeSteps current={2} />
+      <CreateEmployeeSteps current={3} />
       <Card className="px-4 flex-1">
         <Form {...form}>
           <form

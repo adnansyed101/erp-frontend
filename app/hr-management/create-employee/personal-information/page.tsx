@@ -71,7 +71,7 @@ const PersonalInformationPage = () => {
 
   return (
     <div className="flex flex-col md:flex-row gap-2">
-      <CreateEmployeeSteps current={0} />
+      <CreateEmployeeSteps current={1} />
       <Card className="px-4 flex-1">
         <Form {...form}>
           <form

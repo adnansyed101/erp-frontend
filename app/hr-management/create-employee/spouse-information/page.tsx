@@ -56,7 +56,7 @@ const SpouseInformationPage = () => {
 
   return (
     <div className="flex flex-col md:flex-row gap-2">
-      <CreateEmployeeSteps current={3} />
+      <CreateEmployeeSteps current={4} />
       <Card className="px-4 flex-1">
         <Form {...form}>
           <form
