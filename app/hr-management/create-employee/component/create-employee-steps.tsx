@@ -29,6 +29,11 @@ const CreateEmployeeSteps = ({ current = 0 }) => {
       url: "/hr-management/create-employee/bank-information",
       title: "Bank Information",
     },
+    {
+      id: 6,
+      url: "/hr-management/create-employee/emergency-contact-information",
+      title: "Emergency Contact Information",
+    },
   ];
 
   return (
@@ -44,7 +49,6 @@ const CreateEmployeeSteps = ({ current = 0 }) => {
           >
             {step.title}
           </Link>
-          
         </div>
       ))}
     </div>
