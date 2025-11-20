@@ -26,25 +26,25 @@ const CreateEmployeeSteps = ({ current = 0 }) => {
     },
     {
       id: 5,
-      url: "/hr-management/create-employee/bank-information",
-      title: "Bank Information",
+      url: "/hr-management/create-employee/emergency-contact",
+      title: "Emergency Contact",
     },
     {
       id: 6,
-      url: "/hr-management/create-employee/emergency-contact-information",
-      title: "Emergency Contact Information",
+      url: "/hr-management/create-employee/bank-information",
+      title: "Bank Information",
     },
   ];
 
   return (
     <div className="flex flex-col space-x-2 space-y-2 mb-4">
-      {steps.map((step, index) => (
+      {steps.map((step) => (
         <div key={step.id} className="border-l border-gray-400 p-2">
           <Link
             href={step.url}
             className={cn(
               "p-2 w-56 rounded-full text-center text-sm",
-              index === current ? "bg-secondary" : ""
+              step.id === current ? "bg-secondary" : ""
             )}
           >
             {step.title}
