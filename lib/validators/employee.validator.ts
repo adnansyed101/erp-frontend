@@ -19,19 +19,25 @@ const EmployeePersonalInformationSchema = z.object({
   currentDesignation: z.string().min(1, "Current Designation is required"),
   dateOfBirth: z.date(),
   dateOfConfirmation: z.date(),
-  fatherName: z.string().optional().default("n/a"),
-  motherName: z.string().optional().default("n/a"),
-  nationalId: z.string().optional().default("n/a"),
-  placeOfBirth: z.string().optional().default("n/a"),
-  maritalStatus: z
-    .enum(["Single", "Married", "Divorced", "Widowed", "Separated"])
-    .optional()
-    .default("Single"),
-  eTIN: z.string().optional().default("n/a"),
-  program: z.string().optional().default("n/a"),
-  unit: z.string().optional().default("n/a"),
-  prlDate: z.date().optional().default(new Date()),
-  dateofRegularity: z.date().optional().default(new Date()),
+});
+
+const AdditionalInformationSchema = z.object({
+  fatherName: z.string(),
+  motherName: z.string(),
+  nationalId: z.string(),
+  placeOfBirth: z.string(),
+  maritalStatus: z.enum([
+    "Single",
+    "Married",
+    "Divorced",
+    "Widowed",
+    "Separated",
+  ]),
+  eTIN: z.string(),
+  program: z.string(),
+  unit: z.string(),
+  prlDate: z.date(),
+  dateofRegularity: z.date(),
 });
 
 const AddressSchema = z.object({
@@ -67,7 +73,16 @@ export const EmployeeSchema = z.object({
   id: z.string().optional(),
   ...EmployeePersonalInformationSchema.shape,
   ...BankInformationSchema.shape,
-  spouseInformation: ContactInformationSchema.optional(),
+  additionalInformation: AdditionalInformationSchema.optional(),
+  spouseInformation: ContactInformationSchema.optional().default({
+    fullName: "N/A",
+    dateOfBirth: new Date(),
+    gender: "Male",
+    occupation: "N/A",
+    nid: "N/A",
+    mobileNumber: "N/A",
+    email: "n/a@example.com",
+  }),
   emergencyContact: ContactInformationSchema,
   presentAddress: AddressSchema,
   permanentAddress: AddressSchema,
