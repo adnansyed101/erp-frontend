@@ -9,6 +9,18 @@ export type EmployeeDataState = Partial<Employee> & {
 export const useEmployeeDataStore = create<EmployeeDataState>()(
   persist(
     (set) => ({
+      additionalInformation: {
+        fatherName: "N/A",
+        motherName: "N/A",
+        nationalId: "N/A",
+        placeOfBirth: "N/A",
+        maritalStatus: "Single",
+        eTIN: "N/A",
+        program: "N/A",
+        unit: "N/A",
+        prlDate: new Date(),
+        dateofRegularity: new Date(),
+      },
       spouseInformation: {
         fullName: "N/A",
         dateOfBirth: new Date(),
