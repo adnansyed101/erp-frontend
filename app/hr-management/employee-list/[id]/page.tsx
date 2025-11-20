@@ -18,6 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useParams } from "next/navigation";
 import { Employee } from "@/lib/types/types";
 import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
 
 const EmployeeDetailsPage = () => {
   const { id } = useParams();
@@ -64,12 +65,12 @@ const EmployeeDetailsPage = () => {
         ) : (
           <>
             {/* Header Card */}
-            <Card className="overflow-hidden mb-8">
+            <Card className="overflow-hidden mb-8 pt-0">
               <CardHeader className="p-0">
                 <img
                   src={employee.data.imageUrl || "/placeholder.svg"}
                   alt={employee.data.fullName}
-                  className="w-full h-80 object-cover"
+                  className="w-full h-auto object-cover"
                 />
               </CardHeader>
 
@@ -131,7 +132,7 @@ const EmployeeDetailsPage = () => {
                           Date of Birth
                         </p>
                         <p className="text-lg font-semibold">
-                          {employee.data.dateOfBirth.toString()}
+                          {format(employee.data.dateOfBirth.toString(), "PP")}
                         </p>
                       </div>
                       <div>
@@ -457,7 +458,10 @@ const EmployeeDetailsPage = () => {
                             Date of Birth
                           </p>
                           <p className="text-lg font-semibold">
-                            {employee.data.spouseInformation.dateOfBirth.toString()}
+                            {format(
+                              employee.data.spouseInformation.dateOfBirth,
+                              "PP"
+                            )}
                           </p>
                         </div>
                         <div>
@@ -611,7 +615,7 @@ const EmployeeDetailsPage = () => {
                           Date of Confirmation
                         </p>
                         <p className="text-lg font-semibold">
-                          {employee.data.dateOfConfirmation.toString()}
+                          {format(employee.data.dateOfConfirmation, "PP")}
                         </p>
                       </div>
                       <div>
@@ -643,8 +647,7 @@ const EmployeeDetailsPage = () => {
                           Date of Regularity
                         </p>
                         <p className="text-lg font-semibold">
-                          {employee.data.dateofRegularity.toDateString() ||
-                            "N/A"}
+                          {employee.data.dateofRegularity.toString() || "N/A"}
                         </p>
                       </div>
                     </div>
