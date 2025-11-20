@@ -52,10 +52,10 @@ const EmployeeDetailsPage = () => {
     <main className="min-h-screen bg-background p-8">
       <div className="max-w-4xl mx-auto">
         {/* Back Button */}
-        <Link href="/all-employees">
+        <Link href="/hr-management/employee-list/">
           <Button variant="ghost" className="mb-8">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Directory
+            Back
           </Button>
         </Link>
 
@@ -643,7 +643,8 @@ const EmployeeDetailsPage = () => {
                           Date of Regularity
                         </p>
                         <p className="text-lg font-semibold">
-                          {employee.data.dateofRegularity || "N/A"}
+                          {employee.data.dateofRegularity.toDateString() ||
+                            "N/A"}
                         </p>
                       </div>
                     </div>
