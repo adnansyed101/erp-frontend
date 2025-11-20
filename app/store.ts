@@ -7,8 +7,22 @@ export type EmployeeDataState = Partial<Employee> & {
 };
 
 export const useEmployeeDataStore = create<EmployeeDataState>()(
-  persist((set) => ({ setData: (data) => set(data) }), {
-    name: "employee-data-storage",
-    storage: createJSONStorage(()=> localStorage)
-  }),
+  persist(
+    (set) => ({
+      spouseInformation: {
+        fullName: "N/A",
+        dateOfBirth: new Date(),
+        gender: "Male",
+        occupation: "N/A",
+        nid: "N/A",
+        mobileNumber: "N/A",
+        email: "n/a",
+      },
+      setData: (data) => set(data),
+    }),
+    {
+      name: "employee-data-storage",
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
 );
