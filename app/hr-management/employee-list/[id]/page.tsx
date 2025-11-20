@@ -87,7 +87,7 @@ const EmployeeDetailsPage = () => {
                 <div className="flex items-center gap-2">
                   <Building className="w-5 h-5 text-primary" />
                   <p className="text-lg text-muted-foreground">
-                    {employee.data.program}
+                    {employee.data.additionalInformation?.program}
                   </p>
                 </div>
               </CardContent>
@@ -148,7 +148,8 @@ const EmployeeDetailsPage = () => {
                           Marital Status
                         </p>
                         <p className="text-lg font-semibold">
-                          {employee.data.maritalStatus || "N/A"}
+                          {employee.data.additionalInformation?.maritalStatus ||
+                            "N/A"}
                         </p>
                       </div>
                       <div>
@@ -164,7 +165,8 @@ const EmployeeDetailsPage = () => {
                           Father Name
                         </p>
                         <p className="text-lg font-semibold">
-                          {employee.data.fatherName || "N/A"}
+                          {employee.data.additionalInformation?.fatherName ||
+                            "N/A"}
                         </p>
                       </div>
                       <div>
@@ -172,7 +174,8 @@ const EmployeeDetailsPage = () => {
                           Mother Name
                         </p>
                         <p className="text-lg font-semibold">
-                          {employee.data.motherName || "N/A"}
+                          {employee.data.additionalInformation?.motherName ||
+                            "N/A"}
                         </p>
                       </div>
                       <div>
@@ -180,7 +183,8 @@ const EmployeeDetailsPage = () => {
                           National ID
                         </p>
                         <p className="text-lg font-semibold">
-                          {employee.data.nationalId || "N/A"}
+                          {employee.data.additionalInformation?.nationalId ||
+                            "N/A"}
                         </p>
                       </div>
                       <div>
@@ -188,7 +192,7 @@ const EmployeeDetailsPage = () => {
                           eTIN
                         </p>
                         <p className="text-lg font-semibold">
-                          {employee.data.eTIN || "N/A"}
+                          {employee.data.additionalInformation?.eTIN || "N/A"}
                         </p>
                       </div>
                       <div>
@@ -204,7 +208,8 @@ const EmployeeDetailsPage = () => {
                           Place of Birth
                         </p>
                         <p className="text-lg font-semibold">
-                          {employee.data.placeOfBirth || "N/A"}
+                          {employee.data.additionalInformation?.placeOfBirth ||
+                            "N/A"}
                         </p>
                       </div>
                     </div>
@@ -623,7 +628,8 @@ const EmployeeDetailsPage = () => {
                           Program
                         </p>
                         <p className="text-lg font-semibold">
-                          {employee.data.program || "N/A"}
+                          {employee.data.additionalInformation?.program ||
+                            "N/A"}
                         </p>
                       </div>
                       <div>
@@ -631,7 +637,7 @@ const EmployeeDetailsPage = () => {
                           Unit
                         </p>
                         <p className="text-lg font-semibold">
-                          {employee.data.unit || "N/A"}
+                          {employee.data.additionalInformation?.unit || "N/A"}
                         </p>
                       </div>
                       <div>
@@ -639,7 +645,8 @@ const EmployeeDetailsPage = () => {
                           PRL Date
                         </p>
                         <p className="text-lg font-semibold">
-                          {employee.data.prlDate?.toString() || "N/A"}
+                          {employee.data.additionalInformation?.prlDate?.toString() ||
+                            "N/A"}
                         </p>
                       </div>
                       <div>
@@ -647,7 +654,8 @@ const EmployeeDetailsPage = () => {
                           Date of Regularity
                         </p>
                         <p className="text-lg font-semibold">
-                          {employee.data.dateofRegularity.toString() || "N/A"}
+                          {employee.data.additionalInformation?.dateofRegularity.toString() ||
+                            "N/A"}
                         </p>
                       </div>
                     </div>
