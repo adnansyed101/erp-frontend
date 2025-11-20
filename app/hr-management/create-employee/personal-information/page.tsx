@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
 import CreateEmployeeSteps from "../component/create-employee-steps";
 import { useRouter } from "next/navigation";
 import { useEmployeeDataStore } from "@/app/store";
@@ -41,18 +41,18 @@ const PersonalInformationPage = () => {
       fullName: employeeData.fullName || "",
       officeEmail: employeeData.officeEmail || "",
       personalEmail: employeeData.personalEmail || "",
-      personalNumber: employeeData.personalNumber || "",
       officeNumber: employeeData.officeNumber || "",
+      personalNumber: employeeData.personalNumber || "",
       employeeType: employeeData.employeeType || "",
       employeeStatus: employeeData.employeeStatus || "",
-      nationality: employeeData.nationality || "",
-      disability: employeeData.disability || false,
       gender: employeeData.gender || "Male",
+      nationality: employeeData.nationality || "",
       religion: employeeData.religion || "",
       joiningDesignation: employeeData.joiningDesignation || "",
       currentDesignation: employeeData.currentDesignation || "",
       dateOfBirth: employeeData.dateOfBirth || new Date(),
       dateOfConfirmation: employeeData.dateOfConfirmation || new Date(),
+      disability: employeeData.disability || false,
       fatherName: employeeData.fatherName || "",
       motherName: employeeData.motherName || "",
       nationalId: employeeData.nationalId || "",
@@ -73,6 +73,10 @@ const PersonalInformationPage = () => {
     <div className="flex flex-col md:flex-row gap-2">
       <CreateEmployeeSteps current={1} />
       <Card className="px-4 flex-1">
+        <CardTitle className="text-2xl font-semibold">
+          Personal Information
+        </CardTitle>
+
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit, (e) => console.log(e))}

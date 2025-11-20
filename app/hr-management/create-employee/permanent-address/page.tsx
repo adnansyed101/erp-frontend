@@ -14,7 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
 import CreateEmployeeSteps from "../component/create-employee-steps";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -24,6 +24,7 @@ import { Employee } from "@/lib/types/types";
 const PermanentAddressPage = () => {
   const router = useRouter();
   const employeeData = useEmployeeDataStore((state) => state.presentAddress);
+  const setEmployeeData = useEmployeeDataStore((state) => state.setData);
 
   const form = useForm<Partial<Employee>>({
     resolver: zodResolver(EmployeeSchema.partial()),
@@ -41,8 +42,6 @@ const PermanentAddressPage = () => {
     },
   });
 
-  const setEmployeeData = useEmployeeDataStore((state) => state.setData);
-
   const onSubmit = (data: Partial<Employee>) => {
     setEmployeeData(data);
     return router.push("/hr-management/create-employee/present-address");
@@ -52,6 +51,9 @@ const PermanentAddressPage = () => {
     <div className="flex flex-col md:flex-row gap-2">
       <CreateEmployeeSteps current={2} />
       <Card className="px-4 flex-1">
+        <CardTitle className="text-2xl font-semibold">
+          Permanent Address
+        </CardTitle>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}

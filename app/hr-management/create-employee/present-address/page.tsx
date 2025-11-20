@@ -13,7 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
 import CreateEmployeeSteps from "../component/create-employee-steps";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -42,17 +42,6 @@ const PresentAddressPage = () => {
   });
 
   const onSubmit = (data: Partial<Employee>) => {
-    form.trigger([
-      "presentAddress.division",
-      "presentAddress.district",
-      "presentAddress.upazilaOrThana",
-      "presentAddress.postOffice",
-      "presentAddress.postCode",
-      "presentAddress.block",
-      "presentAddress.houseNoOrVillage",
-      "presentAddress.roadNo",
-    ]);
-
     setEmployeeData(data);
 
     return router.push("/hr-management/create-employee/spouse-information");
@@ -62,6 +51,9 @@ const PresentAddressPage = () => {
     <div className="flex flex-col md:flex-row gap-2">
       <CreateEmployeeSteps current={3} />
       <Card className="px-4 flex-1">
+        <CardTitle className="text-2xl font-semibold">
+          Present Address
+        </CardTitle>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit, (e) => console.log(e))}

@@ -13,7 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
 import CreateEmployeeSteps from "../component/create-employee-steps";
 import { useForm } from "react-hook-form";
 import {
@@ -31,33 +31,39 @@ import { Employee } from "@/lib/types/types";
 const SpouseInformationPage = () => {
   const router = useRouter();
 
-  const employeeData = useEmployeeDataStore((state) => state);
+  const spouseInformation = useEmployeeDataStore(
+    (state) => state.spouseInformation
+  );
+  const setEmployeeData = useEmployeeDataStore((state) => state.setData);
 
   const form = useForm<Partial<Employee>>({
     resolver: zodResolver(EmployeeSchema.partial()),
     defaultValues: {
       spouseInformation: {
-        fullName: employeeData.spouseInformation?.fullName || "",
-        dateOfBirth: employeeData.spouseInformation?.dateOfBirth || new Date(),
-        gender: employeeData.spouseInformation?.gender || "",
-        occupation: employeeData.spouseInformation?.occupation || "",
-        nid: employeeData.spouseInformation?.nid || "",
-        mobileNumber: employeeData.spouseInformation?.mobileNumber || "",
-        email: employeeData.spouseInformation?.email || "",
+        fullName: spouseInformation?.fullName || "",
+        dateOfBirth: spouseInformation?.dateOfBirth || new Date(),
+        gender: spouseInformation?.gender || "Male",
+        occupation: spouseInformation?.occupation || "",
+        nid: spouseInformation?.nid || "",
+        mobileNumber: spouseInformation?.mobileNumber || "",
+        email: spouseInformation?.email || "",
       },
     },
   });
 
   const onSubmit = (data: Partial<Employee>) => {
-    employeeData.setData(data);
+    setEmployeeData(data);
 
-    return router.push("/hr-management/create-employee/bank-information");
+    return router.push("/hr-management/create-employee/emergency-contact");
   };
 
   return (
     <div className="flex flex-col md:flex-row gap-2">
       <CreateEmployeeSteps current={4} />
       <Card className="px-4 flex-1">
+        <CardTitle className="text-2xl font-semibold">
+          Spouse Information
+        </CardTitle>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -115,17 +121,17 @@ const SpouseInformationPage = () => {
                     <FormLabel>Gender</FormLabel>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value || ""}
+                      defaultValue={field.value}
                     >
                       <FormControl>
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select gender" />
+                          <SelectValue placeholder="Male" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         <SelectItem value="Male">Male</SelectItem>
                         <SelectItem value="Female">Female</SelectItem>
-                        <SelectItem value="Others">Others</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />

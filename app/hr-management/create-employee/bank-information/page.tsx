@@ -13,7 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
 import CreateEmployeeSteps from "../component/create-employee-steps";
 import { useForm } from "react-hook-form";
 import {
@@ -78,16 +78,21 @@ const BankInformationPage = () => {
 
   const onSubmit = (data: Partial<Employee>) => {
     employeeInformation.setData(data);
+
     mutate({ ...employeeInformation, ...data });
+
     useEmployeeDataStore.setState(useEmployeeDataStore.getInitialState(), true);
     useEmployeeDataStore.persist.clearStorage();
-    router.push("/hr-management/employee-list");
+    return router.push("/hr-management/employee-list");
   };
 
   return (
     <div className="flex flex-col md:flex-row gap-2">
       <CreateEmployeeSteps current={6} />
       <Card className="px-4 flex-1">
+        <CardTitle className="text-2xl font-semibold">
+          Bank Information
+        </CardTitle>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit, (e) => console.log(e))}
