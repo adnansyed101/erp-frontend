@@ -19,18 +19,19 @@ const EmployeePersonalInformationSchema = z.object({
   currentDesignation: z.string().min(1, "Current Designation is required"),
   dateOfBirth: z.date(),
   dateOfConfirmation: z.date(),
-  fatherName: z.string().nullable().optional(),
-  motherName: z.string().optional(),
-  nationalId: z.string().optional(),
-  placeOfBirth: z.string().optional(),
+  fatherName: z.string().optional().default("n/a"),
+  motherName: z.string().optional().default("n/a"),
+  nationalId: z.string().optional().default("n/a"),
+  placeOfBirth: z.string().optional().default("n/a"),
   maritalStatus: z
     .enum(["Single", "Married", "Divorced", "Widowed", "Separated"])
-    .optional(),
-  eTIN: z.string().optional(),
-  program: z.string().optional(),
-  unit: z.string().optional(),
-  prlDate: z.date().optional(),
-  dateofRegularity: z.string().optional(),
+    .optional()
+    .default("Single"),
+  eTIN: z.string().optional().default("n/a"),
+  program: z.string().optional().default("n/a"),
+  unit: z.string().optional().default("n/a"),
+  prlDate: z.date().optional().default(new Date()),
+  dateofRegularity: z.date().optional().default(new Date()),
 });
 
 const AddressSchema = z.object({
@@ -44,10 +45,10 @@ const AddressSchema = z.object({
   roadNo: z.string().optional(),
 });
 
-const SpouseInformationSchema = z.object({
+const ContactInformationSchema = z.object({
   fullName: z.string(),
   dateOfBirth: z.date(),
-  gender: z.string(),
+  gender: z.enum(["Male", "Female", "Other"]),
   occupation: z.string(),
   nid: z.string(),
   mobileNumber: z.string(),
@@ -58,23 +59,16 @@ const BankInformationSchema = z.object({
   bankName: z.string().min(1, "Bank name is required."),
   branchName: z.string().min(1, "Branch name is required."),
   accountNumber: z.string().min(1, "Bank Account Number is required."),
-  walletType: z.string().optional(),
-  walletNumber: z.string().optional(),
+  walletType: z.string().optional().default("n/a"),
+  walletNumber: z.string().optional().default("n/a"),
 });
 
 export const EmployeeSchema = z.object({
   id: z.string().optional(),
   ...EmployeePersonalInformationSchema.shape,
   ...BankInformationSchema.shape,
-  spouseInformation: SpouseInformationSchema,
+  spouseInformation: ContactInformationSchema.optional(),
+  emergencyContact: ContactInformationSchema,
   presentAddress: AddressSchema,
   permanentAddress: AddressSchema,
 });
-
-// z.object({
-//   personalInformation: EmployeePersonalInformationSchema,
-//   permanentAddress: AddressSchema,
-//   presentAddress: AddressSchema,
-//   spouseInformation: SpouseInformationSchema,
-//   bankInformation: BankInformationSchema,
-// });
