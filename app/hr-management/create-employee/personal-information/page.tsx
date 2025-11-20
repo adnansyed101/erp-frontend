@@ -21,12 +21,15 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { Card, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import CreateEmployeeSteps from "../component/create-employee-steps";
 import { useRouter } from "next/navigation";
 import { useEmployeeDataStore } from "@/app/store";
 import { EmployeeSchema } from "@/lib/validators/employee.validator";
 import type { Employee } from "@/lib/types/types.ts";
+import Image from "next/image";
+import { UploadButton } from "@/lib/uploadthing";
+import { toast } from "sonner";
 
 const PersonalInformationPage = () => {
   const router = useRouter();
@@ -69,6 +72,8 @@ const PersonalInformationPage = () => {
     return router.push("/hr-management/create-employee/permanent-address");
   };
 
+  const image = form.watch("imageUrl");
+
   return (
     <div className="flex flex-col md:flex-row gap-2">
       <CreateEmployeeSteps current={1} />
@@ -82,9 +87,9 @@ const PersonalInformationPage = () => {
             onSubmit={form.handleSubmit(onSubmit, (e) => console.log(e))}
             className="space-y-2 lg:space-y-6"
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
               {/* Full Name Input */}
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="imageUrl"
                 render={({ field }) => (
@@ -96,7 +101,7 @@ const PersonalInformationPage = () => {
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
               {/* Full Name Input */}
               <FormField
                 control={form.control}
@@ -376,6 +381,53 @@ const PersonalInformationPage = () => {
                         }
                       />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="upload-field flex flex-col md:flex-row gap-5">
+              {/* Images */}
+              <FormField
+                control={form.control}
+                name="imageUrl"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Images</FormLabel>
+                    <Card>
+                      <CardContent className="space-y-2 mt-2 min-h-48">
+                        <div className="flex-start space-x-2">
+                          {image && (
+                            <Image
+                              key={image}
+                              src={image}
+                              alt="Employee Image"
+                              className="w-20 h-20 object-cover object-center rounded-sm "
+                              width={100}
+                              height={100}
+                            />
+                          )}
+
+                          <FormControl>
+                            {!image && (
+                              <UploadButton
+                                endpoint="imageUploader"
+                                onClientUploadComplete={(
+                                  res: { url: string }[]
+                                ) => {
+                                  form.setValue("imageUrl", res[0].url);
+                                }}
+                                onUploadError={(err: Error) => {
+                                  toast("Something went wrong.", {
+                                    description: `ERROR! ${err.message}`,
+                                  });
+                                }}
+                              />
+                            )}
+                          </FormControl>
+                        </div>
+                      </CardContent>
+                    </Card>
                     <FormMessage />
                   </FormItem>
                 )}
