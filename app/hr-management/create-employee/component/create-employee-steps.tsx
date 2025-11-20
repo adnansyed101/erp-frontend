@@ -11,26 +11,31 @@ const CreateEmployeeSteps = ({ current = 0 }) => {
     },
     {
       id: 2,
+      url: "/hr-management/create-employee/additional-information",
+      title: "Additional Information",
+    },
+    {
+      id: 3,
       url: "/hr-management/create-employee/permanent-address",
       title: "Permanent Address",
     },
     {
-      id: 3,
+      id: 4,
       url: "/hr-management/create-employee/present-address",
       title: "Present Address",
     },
     {
-      id: 4,
+      id: 5,
       url: "/hr-management/create-employee/spouse-information",
       title: "Spouse Information",
     },
     {
-      id: 5,
+      id: 6,
       url: "/hr-management/create-employee/emergency-contact",
       title: "Emergency Contact",
     },
     {
-      id: 6,
+      id: 7,
       url: "/hr-management/create-employee/bank-information",
       title: "Bank Information",
     },
