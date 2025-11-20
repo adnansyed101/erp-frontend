@@ -23,12 +23,12 @@ export function EmployeeCard({
   jobTitle,
 }: EmployeeCardProps) {
   return (
-    <Card className="w-full max-w-sm overflow-hidden">
+    <Card className="w-full max-w-sm overflow-hidden pt-0">
       <CardHeader className="p-0">
         <img
           src={imgUrl || "/placeholder.svg"}
           alt={fullName}
-          className="w-full h-48 object-cover rounded-lg"
+          className="w-full h-60 object-cover rounded-t-2xl"
         />
       </CardHeader>
       <CardContent className="p-6">
