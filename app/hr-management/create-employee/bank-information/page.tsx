@@ -88,7 +88,7 @@ const BankInformationPage = () => {
 
   return (
     <div className="flex flex-col md:flex-row gap-2">
-      <CreateEmployeeSteps current={6} />
+      <CreateEmployeeSteps current={7} />
       <Card className="px-4 flex-1">
         <CardTitle className="text-2xl font-semibold">
           Bank Information
