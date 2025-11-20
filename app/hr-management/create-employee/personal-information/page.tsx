@@ -56,20 +56,12 @@ const PersonalInformationPage = () => {
       dateOfBirth: employeeData.dateOfBirth || new Date(),
       dateOfConfirmation: employeeData.dateOfConfirmation || new Date(),
       disability: employeeData.disability || false,
-      fatherName: employeeData.fatherName || "",
-      motherName: employeeData.motherName || "",
-      nationalId: employeeData.nationalId || "",
-      placeOfBirth: employeeData.placeOfBirth || "",
-      maritalStatus: employeeData.maritalStatus || "Single",
-      eTIN: employeeData.eTIN || "",
-      program: employeeData.program || "",
-      unit: employeeData.unit || "",
     },
   });
 
   const onSubmit = (data: Partial<Employee>) => {
     setEmployeeData(data);
-    return router.push("/hr-management/create-employee/permanent-address");
+    return router.push("/hr-management/create-employee/additional-information");
   };
 
   const image = form.watch("imageUrl");
