@@ -1,8 +1,6 @@
 import z from "zod";
 
-// The Employee Validation is exported at the bottom.
-
-const EmployeePersonalInformationSchema = z.object({
+export const PersonalInformationSchema = z.object({
   fullName: z.string().min(2, "At least 2 characters are needed."),
   imageUrl: z.string().min(2, "At least 2 characters are needed."),
   officeEmail: z.email(),
@@ -21,7 +19,7 @@ const EmployeePersonalInformationSchema = z.object({
   dateOfConfirmation: z.date(),
 });
 
-const AdditionalInformationSchema = z.object({
+export const AdditionalInformationSchema = z.object({
   fatherName: z.string(),
   motherName: z.string(),
   nationalId: z.string(),
@@ -40,7 +38,7 @@ const AdditionalInformationSchema = z.object({
   dateofRegularity: z.date(),
 });
 
-const AddressSchema = z.object({
+export const AddressSchema = z.object({
   division: z.string().min(1, "Division is required."),
   district: z.string().min(1, "District is required."),
   upazilaOrThana: z.string().min(1, "Upazila is required"),
@@ -61,7 +59,20 @@ const ContactInformationSchema = z.object({
   email: z.email(),
 });
 
-const BankInformationSchema = z.object({
+export const spouseInformationSchema =
+  ContactInformationSchema.optional().default({
+    fullName: "N/A",
+    dateOfBirth: new Date(),
+    gender: "Male",
+    occupation: "N/A",
+    nid: "N/A",
+    mobileNumber: "N/A",
+    email: "n/a@example.com",
+  });
+
+export const EmergencyContactSchema = ContactInformationSchema;
+
+export const BankInformationSchema = z.object({
   bankName: z.string().min(1, "Bank name is required."),
   branchName: z.string().min(1, "Branch name is required."),
   accountNumber: z.string().min(1, "Bank Account Number is required."),
@@ -70,19 +81,10 @@ const BankInformationSchema = z.object({
 });
 
 export const EmployeeSchema = z.object({
-  id: z.string().optional(),
-  ...EmployeePersonalInformationSchema.shape,
-  ...BankInformationSchema.shape,
+  personalInformation: PersonalInformationSchema,
+  bankInformation: BankInformationSchema,
   additionalInformation: AdditionalInformationSchema.optional(),
-  spouseInformation: ContactInformationSchema.optional().default({
-    fullName: "N/A",
-    dateOfBirth: new Date(),
-    gender: "Male",
-    occupation: "N/A",
-    nid: "N/A",
-    mobileNumber: "N/A",
-    email: "n/a@example.com",
-  }),
+  spouseInformation: ContactInformationSchema.optional(),
   emergencyContact: ContactInformationSchema,
   presentAddress: AddressSchema,
   permanentAddress: AddressSchema,
