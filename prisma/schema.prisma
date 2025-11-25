@@ -7,87 +7,6 @@ datasource db {
   provider = "postgresql"
 }
 
-model AdditionalInformation {
-  id               String         @id
-  fatherName       String?        @default("n/a")
-  motherName       String?        @default("n/a")
-  nationalId       String?        @default("n/a")
-  placeOfBirth     String?        @default("n/a")
-  maritalStatus    MaritalStatus? @default(Single)
-  eTIN             String?        @default("n/a")
-  program          String?        @default("n/a")
-  unit             String?        @default("n/a")
-  prlDate          DateTime?      @default(now())
-  dateofRegularity DateTime?      @default(now())
-  createdAt        DateTime       @default(now())
-  Employee         Employee?
-}
-
-model Address {
-  id                                            String    @id
-  division                                      String
-  district                                      String
-  upazilaOrThana                                String
-  postOffice                                    String
-  postCode                                      String
-  block                                         String
-  houseNoOrVillage                              String
-  roadNo                                        String?   @default("n/a")
-  createdAt                                     DateTime  @default(now())
-  Employee_Employee_permanentAddressIdToAddress Employee? @relation("Employee_permanentAddressIdToAddress")
-  Employee_Employee_presentAddressIdToAddress   Employee? @relation("Employee_presentAddressIdToAddress")
-}
-
-model ContactInformation {
-  id                                                        String    @id
-  fullName                                                  String    @default("n/a")
-  dateOfBirth                                               DateTime  @default(now())
-  gender                                                    String    @default("n/a")
-  occupation                                                String    @default("n/a")
-  nid                                                       String    @default("n/a")
-  mobileNumber                                              String    @default("n/a")
-  email                                                     String    @default("n/a")
-  createdAt                                                 DateTime  @default(now())
-  Employee_Employee_emergencyContactIdToContactInformation  Employee? @relation("Employee_emergencyContactIdToContactInformation")
-  Employee_Employee_spouseInformationIdToContactInformation Employee? @relation("Employee_spouseInformationIdToContactInformation")
-}
-
-model Employee {
-  id                                                                  String                @id
-  presentAddressId                                                    String                @unique
-  permanentAddressId                                                  String                @unique
-  currentDesignation                                                  String
-  dateOfBirth                                                         DateTime              @default(now())
-  dateOfConfirmation                                                  DateTime              @default(now())
-  disability                                                          Boolean
-  employeeStatus                                                      String
-  employeeType                                                        String
-  fullName                                                            String
-  gender                                                              Gender
-  imageUrl                                                            String
-  joiningDesignation                                                  String
-  nationality                                                         String
-  officeEmail                                                         String                @unique
-  officeNumber                                                        String
-  personalEmail                                                       String                @unique
-  personalNumber                                                      String
-  religion                                                            String
-  spouseInformationId                                                 String?               @unique
-  emergencyContactId                                                  String                @unique
-  addtionalInformationId                                              String                @unique
-  createdAt                                                           DateTime              @default(now())
-  accountNumber                                                       String
-  bankName                                                            String
-  branchName                                                          String
-  walletNumber                                                        String
-  walletType                                                          String
-  AdditionalInformation                                               AdditionalInformation @relation(fields: [addtionalInformationId], references: [id], onDelete: Cascade)
-  ContactInformation_Employee_emergencyContactIdToContactInformation  ContactInformation    @relation("Employee_emergencyContactIdToContactInformation", fields: [emergencyContactId], references: [id], onDelete: Cascade)
-  Address_Employee_permanentAddressIdToAddress                        Address               @relation("Employee_permanentAddressIdToAddress", fields: [permanentAddressId], references: [id], onDelete: Cascade)
-  Address_Employee_presentAddressIdToAddress                          Address               @relation("Employee_presentAddressIdToAddress", fields: [presentAddressId], references: [id], onDelete: Cascade)
-  ContactInformation_Employee_spouseInformationIdToContactInformation ContactInformation?   @relation("Employee_spouseInformationIdToContactInformation", fields: [spouseInformationId], references: [id], onDelete: Cascade)
-}
-
 enum Gender {
   Male
   Female
@@ -100,4 +19,107 @@ enum MaritalStatus {
   Divorced
   Widowed
   Separated
+}
+
+model Address {
+  id                        String    @id @default(uuid())
+  division                  String
+  district                  String
+  upazilaOrThana            String
+  postOffice                String
+  postCode                  String
+  block                     String
+  houseNoOrVillage          String
+  roadNo                    String?   @default("n/a")
+  createdAt                 DateTime  @default(now())
+  employeePresentAddress    Employee? @relation("employeePresentAddress")
+  employeePermanenttAddress Employee? @relation("employeePermanentAddress")
+}
+
+model ContactInformation {
+  id                        String    @id @default(uuid())
+  fullName                  String    @default("n/a")
+  dateOfBirth               DateTime  @default(now())
+  gender                    String    @default("n/a")
+  occupation                String    @default("n/a")
+  nid                       String    @default("n/a")
+  mobileNumber              String    @default("n/a")
+  email                     String    @default("n/a")
+  createdAt                 DateTime  @default(now())
+  employeeSpouseInformation Employee? @relation("spouseInformation")
+  employeeEmergencyContact  Employee? @relation("emergencyContact")
+}
+
+model AdditionalInformation {
+  id               String         @id @default(uuid())
+  fatherName       String?        @default("n/a")
+  motherName       String?        @default("n/a")
+  nationalId       String?        @default("n/a")
+  placeOfBirth     String?        @default("n/a")
+  maritalStatus    MaritalStatus? @default(Single)
+  eTIN             String?        @default("n/a")
+  program          String?        @default("n/a")
+  unit             String?        @default("n/a")
+  prlDate          DateTime?      @default(now())
+  dateofRegularity DateTime?      @default(now())
+  createdAt        DateTime       @default(now())
+  employee         Employee?
+}
+
+model PersonalInformation {
+  id                 String     @id @default(uuid())
+  fullName           String
+  imageUrl           String
+  officeEmail        String     @unique
+  personalEmail      String     @unique
+  personalNumber     String
+  officeNumber       String
+  employeeType       String
+  employeeStatus     String
+  nationality        String
+  disability         Boolean
+  gender             Gender
+  religion           String
+  joiningDesignation String
+  currentDesignation String
+  dateOfBirth        DateTime   @default(now())
+  dateOfConfirmation DateTime   @default(now())
+  createdAt          DateTime   @default(now())
+  employees          Employee[]
+}
+
+model BankInformation {
+  id            String     @id @default(uuid())
+  bankName      String
+  branchName    String
+  accountNumber String
+  walletType    String
+  walletNumber  String
+  createdAt     DateTime   @default(now())
+  employees     Employee[]
+}
+
+model Employee {
+  id                    String              @id @default(uuid())
+  createdAt             DateTime            @default(now())
+  // Personal Information Relation
+  personalInformationId String
+  personalInformation   PersonalInformation @relation(fields: [personalInformationId], references: [id])
+  // Bank Information Relation
+  bankInformation       BankInformation     @relation(fields: [bankInformationId], references: [id])
+  bankInformationId     String
+  // Addtional Informatio Relation
+  addtionalInformationId String                @unique
+  additionalInformation  AdditionalInformation @relation(fields: [addtionalInformationId], references: [id], onDelete: Cascade)
+  // Address Relation
+  presentAddressId       String                @unique
+  presentAddress         Address               @relation(name: "employeePresentAddress", fields: [presentAddressId], references: [id], onDelete: Cascade)
+  permanentAddressId     String                @unique
+  permanentAddress       Address               @relation(name: "employeePermanentAddress", fields: [permanentAddressId], references: [id], onDelete: Cascade)
+  // Spouse Information Relation
+  spouseInformation      ContactInformation?   @relation(name: "spouseInformation", fields: [spouseInformationId], references: [id], onDelete: Cascade)
+  spouseInformationId    String?               @unique
+  // Emergency Contact Relation
+  emergencyContact       ContactInformation    @relation(name: "emergencyContact", fields: [emergencyContactId], references: [id], onDelete: Cascade)
+  emergencyContactId     String                @unique
 }
