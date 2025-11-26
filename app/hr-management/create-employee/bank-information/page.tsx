@@ -1,9 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect } from "react";
-import z from "zod";
-import { EmployeeSchema } from "@/lib/validators/employee.validator";
+import { BankInformationSchema } from "@/lib/validators/employee.validator";
 import {
   Form,
   FormControl,
@@ -24,49 +22,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { EmployeeDataState, useEmployeeDataStore } from "@/app/store";
+import { useBankInformationState } from "@/app/stores/employee.store";
 import { toast } from "sonner";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Employee } from "@/lib/types/types";
 import { useRouter } from "next/navigation";
+import { BankInformation } from "@/lib/types/employee.types";
 
 const BankInformationPage = () => {
-  const queryClient = useQueryClient();
   const router = useRouter();
 
-  const { mutate } = useMutation({
-    mutationKey: ["employees"],
-    mutationFn: async (newEmployee: Omit<EmployeeDataState, "setState">) => {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/hr-management/create-employee`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newEmployee),
-        }
-      );
-      if (!response.ok) {
-        return console.log("Error occured in creating employee.");
-      }
+  const employeeInformation = useBankInformationState((state) => state);
 
-      return response;
-    },
-    onSuccess: () => {
-      // Invalidate and refetch queries after a successful mutation
-      queryClient.invalidateQueries({ queryKey: ["employees"] });
-      toast.success("Employee created");
-    },
-    onError: (error) => {
-      alert(`Error creating post: ${error.message}`);
-    },
-  });
-
-  const employeeInformation = useEmployeeDataStore((state) => state);
-
-  const form = useForm<Partial<Employee>>({
-    resolver: zodResolver(EmployeeSchema.partial()),
+  const form = useForm<BankInformation>({
+    resolver: zodResolver(BankInformationSchema),
     defaultValues: {
       bankName: employeeInformation.bankName || "",
       branchName: employeeInformation.branchName || "",
@@ -76,14 +43,13 @@ const BankInformationPage = () => {
     },
   });
 
-  const onSubmit = (data: Partial<Employee>) => {
+  const onSubmit = (data: BankInformation) => {
     employeeInformation.setData(data);
-
-    mutate({ ...employeeInformation, ...data });
-
-    useEmployeeDataStore.setState(useEmployeeDataStore.getInitialState(), true);
-    useEmployeeDataStore.persist.clearStorage();
     return router.push("/hr-management/employee-list");
+  };
+
+  const handleResetButton = () => {
+    return toast.success("Data is cleared.");
   };
 
   return (
@@ -185,18 +151,11 @@ const BankInformationPage = () => {
             </div>
 
             <div className="space-x-2">
-              <Button type="submit">Submit</Button>
+              <Button type="submit">Confirm</Button>
               <Button
                 type="button"
                 variant="destructive"
-                onClick={() => {
-                  useEmployeeDataStore.persist.clearStorage();
-                  useEmployeeDataStore.setState(
-                    useEmployeeDataStore.getInitialState(),
-                    true
-                  );
-                  return toast.success("Data is cleared.");
-                }}
+                onClick={handleResetButton}
               >
                 Reset
               </Button>

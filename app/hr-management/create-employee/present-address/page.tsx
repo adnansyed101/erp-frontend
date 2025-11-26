@@ -2,8 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import z from "zod";
-import { EmployeeSchema } from "@/lib/validators/employee.validator";
+import { PermanentAddressSchema } from "@/lib/validators/employee.validator";
 import {
   Form,
   FormControl,
@@ -17,32 +16,29 @@ import { Card, CardTitle } from "@/components/ui/card";
 import CreateEmployeeSteps from "../component/create-employee-steps";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useEmployeeDataStore } from "@/app/store";
-import { Employee } from "@/lib/types/types";
+import { useEmployeePermanentAddress } from "@/app/stores/employee.store";
+import { PermanentAddress } from "@/lib/types/employee.types";
 
 const PresentAddressPage = () => {
   const router = useRouter();
-  const employeeData = useEmployeeDataStore((state) => state.presentAddress);
-  const setEmployeeData = useEmployeeDataStore((state) => state.setData);
+  const employeeData = useEmployeePermanentAddress((state) => state);
 
-  const form = useForm<Partial<Employee>>({
-    resolver: zodResolver(EmployeeSchema.partial()),
+  const form = useForm<PermanentAddress>({
+    resolver: zodResolver(PermanentAddressSchema),
     defaultValues: {
-      presentAddress: {
-        division: employeeData?.division || "",
-        district: employeeData?.district || "",
-        upazilaOrThana: employeeData?.upazilaOrThana || "",
-        postOffice: employeeData?.postOffice || "",
-        postCode: employeeData?.postCode || "",
-        block: employeeData?.block || "",
-        houseNoOrVillage: employeeData?.houseNoOrVillage || "",
-        roadNo: employeeData?.roadNo || "",
-      },
+      division: employeeData.division || "",
+      district: employeeData.district || "",
+      upazilaOrThana: employeeData.upazilaOrThana || "",
+      postOffice: employeeData.postOffice || "",
+      postCode: employeeData.postCode || "",
+      block: employeeData.block || "",
+      houseNoOrVillage: employeeData.houseNoOrVillage || "",
+      roadNo: employeeData.roadNo || "",
     },
   });
 
-  const onSubmit = (data: Partial<Employee>) => {
-    setEmployeeData(data);
+  const onSubmit = (data: PermanentAddress) => {
+    employeeData.setData(data);
 
     return router.push("/hr-management/create-employee/spouse-information");
   };
@@ -62,7 +58,7 @@ const PresentAddressPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="presentAddress.division"
+                name="division"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Division</FormLabel>
@@ -76,7 +72,7 @@ const PresentAddressPage = () => {
 
               <FormField
                 control={form.control}
-                name="presentAddress.district"
+                name="district"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>District</FormLabel>
@@ -92,7 +88,7 @@ const PresentAddressPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="presentAddress.upazilaOrThana"
+                name="upazilaOrThana"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Upazila/Thana</FormLabel>
@@ -106,7 +102,7 @@ const PresentAddressPage = () => {
 
               <FormField
                 control={form.control}
-                name="presentAddress.postOffice"
+                name="postOffice"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Post Office</FormLabel>
@@ -122,7 +118,7 @@ const PresentAddressPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="presentAddress.postCode"
+                name="postCode"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Post Code</FormLabel>
@@ -136,7 +132,7 @@ const PresentAddressPage = () => {
 
               <FormField
                 control={form.control}
-                name="presentAddress.houseNoOrVillage"
+                name="houseNoOrVillage"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>House No./Village</FormLabel>
@@ -151,7 +147,7 @@ const PresentAddressPage = () => {
 
             <FormField
               control={form.control}
-              name="presentAddress.roadNo"
+              name="roadNo"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Road No. (Optional)</FormLabel>
@@ -165,7 +161,7 @@ const PresentAddressPage = () => {
 
             <FormField
               control={form.control}
-              name="presentAddress.block"
+              name="block"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Block (Optional)</FormLabel>

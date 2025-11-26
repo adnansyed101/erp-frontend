@@ -3,7 +3,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import z from "zod";
-import { EmployeeSchema } from "@/lib/validators/employee.validator";
+import {
+  EmergencyContactSchema,
+  EmployeeSchema,
+} from "@/lib/validators/employee.validator";
 import {
   Form,
   FormControl,
@@ -25,34 +28,30 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useEmployeeDataStore } from "@/app/store";
+import { useEmployeeEmergencyContact } from "@/app/stores/employee.store";
 import { Employee } from "@/lib/types/types";
+import { EmergencyContact } from "@/lib/types/employee.types";
 
 const EmergencyContactPage = () => {
   const router = useRouter();
 
-  const emergencyContact = useEmployeeDataStore(
-    (state) => state.emergencyContact
-  );
-  const setEmployeeData = useEmployeeDataStore((state) => state.setData);
+  const emergencyContact = useEmployeeEmergencyContact((state) => state);
 
-  const form = useForm<Partial<Employee>>({
-    resolver: zodResolver(EmployeeSchema.partial()),
+  const form = useForm<EmergencyContact>({
+    resolver: zodResolver(EmergencyContactSchema),
     defaultValues: {
-      emergencyContact: {
-        fullName: emergencyContact?.fullName || "",
-        dateOfBirth: emergencyContact?.dateOfBirth || new Date(),
-        gender: emergencyContact?.gender || "Male",
-        occupation: emergencyContact?.occupation || "",
-        nid: emergencyContact?.nid || "",
-        mobileNumber: emergencyContact?.mobileNumber || "",
-        email: emergencyContact?.email || "",
-      },
+      fullName: emergencyContact?.fullName || "",
+      dateOfBirth: emergencyContact?.dateOfBirth || new Date(),
+      gender: emergencyContact?.gender || "Male",
+      occupation: emergencyContact?.occupation || "",
+      nid: emergencyContact?.nid || "",
+      mobileNumber: emergencyContact?.mobileNumber || "",
+      email: emergencyContact?.email || "",
     },
   });
 
-  const onSubmit = (data: Partial<Employee>) => {
-    setEmployeeData(data);
+  const onSubmit = (data: EmergencyContact) => {
+    emergencyContact.setData(data);
 
     return router.push("/hr-management/create-employee/bank-information");
   };
@@ -71,7 +70,7 @@ const EmergencyContactPage = () => {
           >
             <FormField
               control={form.control}
-              name="emergencyContact.fullName"
+              name="fullName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Full Name</FormLabel>
@@ -90,7 +89,7 @@ const EmergencyContactPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="emergencyContact.dateOfBirth"
+                name="dateOfBirth"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Date of Birth</FormLabel>
@@ -115,7 +114,7 @@ const EmergencyContactPage = () => {
 
               <FormField
                 control={form.control}
-                name="emergencyContact.gender"
+                name="gender"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Gender</FormLabel>
@@ -143,7 +142,7 @@ const EmergencyContactPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="emergencyContact.occupation"
+                name="occupation"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Occupation</FormLabel>
@@ -161,7 +160,7 @@ const EmergencyContactPage = () => {
 
               <FormField
                 control={form.control}
-                name="emergencyContact.nid"
+                name="nid"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>NID</FormLabel>
@@ -181,7 +180,7 @@ const EmergencyContactPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="emergencyContact.mobileNumber"
+                name="mobileNumber"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Mobile Number</FormLabel>
@@ -199,7 +198,7 @@ const EmergencyContactPage = () => {
 
               <FormField
                 control={form.control}
-                name="emergencyContact.email"
+                name="email"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Email</FormLabel>

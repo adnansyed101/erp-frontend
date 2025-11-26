@@ -1,9 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
-import z from "zod";
-import { EmployeeSchema } from "@/lib/validators/employee.validator";
+import { SpouseInformationSchema } from "@/lib/validators/employee.validator";
 import {
   Form,
   FormControl,
@@ -25,34 +23,40 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useEmployeeDataStore } from "@/app/store";
-import { Employee } from "@/lib/types/types";
+import {
+  useEmployeeAdditionalInformation,
+  useEmployeePersonalInformationDataStore,
+  useEmployeeSpouseInformation,
+} from "@/app/stores/employee.store";
+import { SpouseInformation } from "@/lib/types/employee.types";
 
 const SpouseInformationPage = () => {
   const router = useRouter();
-
-  const spouseInformation = useEmployeeDataStore(
-    (state) => state.spouseInformation
+  const isSingle = useEmployeeAdditionalInformation(
+    (state) => state.maritalStatus
   );
-  const setEmployeeData = useEmployeeDataStore((state) => state.setData);
 
-  const form = useForm<Partial<Employee>>({
-    resolver: zodResolver(EmployeeSchema.partial()),
+  if (isSingle === "Single") {
+    return router.push("/hr-management/create-employee/emergency-contact");
+  }
+
+  const employeeData = useEmployeeSpouseInformation((state) => state);
+
+  const form = useForm<SpouseInformation>({
+    resolver: zodResolver(SpouseInformationSchema),
     defaultValues: {
-      spouseInformation: {
-        fullName: spouseInformation?.fullName || "",
-        dateOfBirth: spouseInformation?.dateOfBirth || new Date(),
-        gender: spouseInformation?.gender || "Male",
-        occupation: spouseInformation?.occupation || "",
-        nid: spouseInformation?.nid || "",
-        mobileNumber: spouseInformation?.mobileNumber || "",
-        email: spouseInformation?.email || "",
-      },
+      fullName: employeeData.fullName || "",
+      dateOfBirth: employeeData.dateOfBirth || new Date(),
+      gender: employeeData.gender || "Female",
+      occupation: employeeData.occupation || "",
+      nid: employeeData.nid || "",
+      mobileNumber: employeeData.mobileNumber || "",
+      email: employeeData.email || "",
     },
   });
 
-  const onSubmit = (data: Partial<Employee>) => {
-    setEmployeeData(data);
+  const onSubmit = (data: SpouseInformation) => {
+    employeeData.setData(data);
 
     return router.push("/hr-management/create-employee/emergency-contact");
   };
@@ -71,7 +75,7 @@ const SpouseInformationPage = () => {
           >
             <FormField
               control={form.control}
-              name="spouseInformation.fullName"
+              name="fullName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Full Name</FormLabel>
@@ -90,7 +94,7 @@ const SpouseInformationPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="spouseInformation.dateOfBirth"
+                name="dateOfBirth"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Date of Birth</FormLabel>
@@ -115,7 +119,7 @@ const SpouseInformationPage = () => {
 
               <FormField
                 control={form.control}
-                name="spouseInformation.gender"
+                name="gender"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Gender</FormLabel>
@@ -143,7 +147,7 @@ const SpouseInformationPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="spouseInformation.occupation"
+                name="occupation"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Occupation</FormLabel>
@@ -161,7 +165,7 @@ const SpouseInformationPage = () => {
 
               <FormField
                 control={form.control}
-                name="spouseInformation.nid"
+                name="nid"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>NID</FormLabel>
@@ -181,7 +185,7 @@ const SpouseInformationPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="spouseInformation.mobileNumber"
+                name="mobileNumber"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Mobile Number</FormLabel>
@@ -199,7 +203,7 @@ const SpouseInformationPage = () => {
 
               <FormField
                 control={form.control}
-                name="spouseInformation.email"
+                name="email"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Email</FormLabel>

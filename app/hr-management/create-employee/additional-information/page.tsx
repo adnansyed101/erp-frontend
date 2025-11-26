@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
-import { EmployeeSchema } from "@/lib/validators/employee.validator";
+import { AdditionalInformationSchema } from "@/lib/validators/employee.validator";
 import {
   Form,
   FormControl,
@@ -24,37 +24,34 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useEmployeeDataStore } from "@/app/store";
-import { Employee } from "@/lib/types/types";
+import { useEmployeeAdditionalInformation } from "@/app/stores/employee.store";
+import { AddtionalInformation } from "@/lib/types/employee.types";
 
 const AdditionalInformationPage = () => {
   const router = useRouter();
 
-  const additionalInformation = useEmployeeDataStore(
-    (state) => state.additionalInformation
+  const additionalInformation = useEmployeeAdditionalInformation(
+    (state) => state
   );
-  const setEmployeeData = useEmployeeDataStore((state) => state.setData);
 
-  const form = useForm<Partial<Employee>>({
-    resolver: zodResolver(EmployeeSchema.partial()),
+  const form = useForm<AddtionalInformation>({
+    resolver: zodResolver(AdditionalInformationSchema),
     defaultValues: {
-      additionalInformation: {
-        fatherName: additionalInformation?.fatherName || "",
-        motherName: additionalInformation?.motherName || "",
-        nationalId: additionalInformation?.nationalId || "",
-        placeOfBirth: additionalInformation?.placeOfBirth || "",
-        maritalStatus: additionalInformation?.maritalStatus || "Single",
-        eTIN: additionalInformation?.eTIN || "",
-        program: additionalInformation?.program || "",
-        unit: additionalInformation?.unit || "",
-        prlDate: additionalInformation?.prlDate || new Date(),
-        dateofRegularity: additionalInformation?.dateofRegularity || new Date(),
-      },
+      fatherName: additionalInformation.fatherName || "",
+      motherName: additionalInformation.motherName || "",
+      nationalId: additionalInformation.nationalId || "",
+      placeOfBirth: additionalInformation.placeOfBirth || "",
+      maritalStatus: additionalInformation.maritalStatus || "Single",
+      eTIN: additionalInformation.eTIN || "",
+      program: additionalInformation.program || "",
+      unit: additionalInformation.unit || "",
+      prlDate: additionalInformation.prlDate || new Date(),
+      dateofRegularity: additionalInformation.dateofRegularity || new Date(),
     },
   });
 
-  const onSubmit = (data: Partial<Employee>) => {
-    setEmployeeData(data);
+  const onSubmit = (data: AddtionalInformation) => {
+    additionalInformation.setData(data);
 
     return router.push("/hr-management/create-employee/permanent-address");
   };
@@ -73,7 +70,7 @@ const AdditionalInformationPage = () => {
           >
             <FormField
               control={form.control}
-              name="additionalInformation.fatherName"
+              name="fatherName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Father Name</FormLabel>
@@ -92,7 +89,7 @@ const AdditionalInformationPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="additionalInformation.motherName"
+                name="motherName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Mother Name</FormLabel>
@@ -110,7 +107,7 @@ const AdditionalInformationPage = () => {
 
               <FormField
                 control={form.control}
-                name="additionalInformation.nationalId"
+                name="nationalId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>National ID No.</FormLabel>
@@ -128,7 +125,7 @@ const AdditionalInformationPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="additionalInformation.placeOfBirth"
+                name="placeOfBirth"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Place Of Birth</FormLabel>
@@ -146,7 +143,7 @@ const AdditionalInformationPage = () => {
 
               <FormField
                 control={form.control}
-                name="additionalInformation.maritalStatus"
+                name="maritalStatus"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Marital Status</FormLabel>
@@ -178,7 +175,7 @@ const AdditionalInformationPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
-                name="additionalInformation.eTIN"
+                name="eTIN"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>eTIN Number</FormLabel>
@@ -196,7 +193,7 @@ const AdditionalInformationPage = () => {
 
               <FormField
                 control={form.control}
-                name="additionalInformation.program"
+                name="program"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Program</FormLabel>
@@ -216,7 +213,7 @@ const AdditionalInformationPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <FormField
                 control={form.control}
-                name="additionalInformation.unit"
+                name="unit"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Unit</FormLabel>
@@ -234,7 +231,7 @@ const AdditionalInformationPage = () => {
 
               <FormField
                 control={form.control}
-                name="additionalInformation.prlDate"
+                name="prlDate"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>PRL Date</FormLabel>
@@ -259,7 +256,7 @@ const AdditionalInformationPage = () => {
 
               <FormField
                 control={form.control}
-                name="additionalInformation.dateofRegularity"
+                name="dateofRegularity"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Date of Regularity</FormLabel>

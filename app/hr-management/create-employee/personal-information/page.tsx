@@ -24,21 +24,26 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import CreateEmployeeSteps from "../component/create-employee-steps";
 import { useRouter } from "next/navigation";
-import { useEmployeeDataStore } from "@/app/store";
-import { EmployeeSchema } from "@/lib/validators/employee.validator";
+import { useEmployeePersonalInformationDataStore } from "@/app/stores/employee.store";
+import {
+  EmployeeSchema,
+  PersonalInformationSchema,
+} from "@/lib/validators/employee.validator";
 import type { Employee } from "@/lib/types/types.ts";
 import Image from "next/image";
 import { UploadButton } from "@/lib/uploadthing";
 import { toast } from "sonner";
+import { PersonalInformation } from "@/lib/types/employee.types";
 
 const PersonalInformationPage = () => {
   const router = useRouter();
-  const employeeData = useEmployeeDataStore((state) => state);
-  const setEmployeeData = useEmployeeDataStore((state) => state.setData);
+  const employeeData = useEmployeePersonalInformationDataStore(
+    (state) => state
+  );
 
   // Form Data
-  const form = useForm<Partial<Employee>>({
-    resolver: zodResolver(EmployeeSchema.partial()),
+  const form = useForm<PersonalInformation>({
+    resolver: zodResolver(PersonalInformationSchema),
     defaultValues: {
       imageUrl: employeeData.imageUrl || "",
       fullName: employeeData.fullName || "",
@@ -59,8 +64,8 @@ const PersonalInformationPage = () => {
     },
   });
 
-  const onSubmit = (data: Partial<Employee>) => {
-    setEmployeeData(data);
+  const onSubmit = (data: PersonalInformation) => {
+    employeeData.setData(data);
     return router.push("/hr-management/create-employee/additional-information");
   };
 
