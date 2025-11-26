@@ -17,7 +17,16 @@ export async function createEmployee(data: z.infer<typeof EmployeeSchema>) {
   try {
     const newEmployee = await prisma.employee.create({
       data: {
-        ...data,
+        personalInformation: {
+          create: {
+            ...data.personalInformation,
+          },
+        },
+        additionalInformation: {
+          create: {
+            ...data.additionalInformation,
+          },
+        },
         presentAddress: {
           create: {
             ...data.presentAddress,
@@ -38,9 +47,9 @@ export async function createEmployee(data: z.infer<typeof EmployeeSchema>) {
             ...data.emergencyContact,
           },
         },
-        additionalInformation: {
+        bankInformation: {
           create: {
-            ...data.additionalInformation,
+            ...data.bankInformation,
           },
         },
       },
