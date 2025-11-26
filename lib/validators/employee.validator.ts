@@ -20,7 +20,7 @@ export const PersonalInformationSchema = z.object({
 });
 
 export const AdditionalInformationSchema = z.object({
-  fatherName: z.string(),
+  fatherName: z.string().optional(),
   motherName: z.string(),
   nationalId: z.string(),
   placeOfBirth: z.string(),
@@ -38,7 +38,7 @@ export const AdditionalInformationSchema = z.object({
   dateofRegularity: z.date(),
 });
 
-export const AddressSchema = z.object({
+const AddressSchema = z.object({
   division: z.string().min(1, "Division is required."),
   district: z.string().min(1, "District is required."),
   upazilaOrThana: z.string().min(1, "Upazila is required"),
@@ -49,7 +49,10 @@ export const AddressSchema = z.object({
   roadNo: z.string().optional(),
 });
 
-const ContactInformationSchema = z.object({
+export const PresentAddressSchema = AddressSchema;
+export const PermanentAddressSchema = AddressSchema;
+
+export const EmergencyContactSchema = z.object({
   fullName: z.string(),
   dateOfBirth: z.date(),
   gender: z.enum(["Male", "Female", "Other"]),
@@ -59,33 +62,36 @@ const ContactInformationSchema = z.object({
   email: z.email(),
 });
 
-export const spouseInformationSchema =
-  ContactInformationSchema.optional().default({
-    fullName: "N/A",
-    dateOfBirth: new Date(),
-    gender: "Male",
-    occupation: "N/A",
-    nid: "N/A",
-    mobileNumber: "N/A",
-    email: "n/a@example.com",
-  });
+export const SpouseInformationSchema = z.object({
+  fullName: z.string().optional(),
+  dateOfBirth: z.date().optional(),
+  gender: z.enum(["Male", "Female", "Other"]).optional(),
+  occupation: z.string().optional(),
+  nid: z.string().optional(),
+  mobileNumber: z.string().optional(),
+  email: z.email().optional(),
+});
 
-export const EmergencyContactSchema = ContactInformationSchema;
+// export const SpouseInformationSchema = ContactInformationSchema.optional();
+
+// export const EmergencyContactSchema = ContactInformationSchema;
 
 export const BankInformationSchema = z.object({
   bankName: z.string().min(1, "Bank name is required."),
   branchName: z.string().min(1, "Branch name is required."),
   accountNumber: z.string().min(1, "Bank Account Number is required."),
-  walletType: z.string().optional().default("n/a"),
-  walletNumber: z.string().optional().default("n/a"),
+  walletType: z.string().optional(),
+  walletNumber: z.string().optional(),
 });
 
 export const EmployeeSchema = z.object({
   personalInformation: PersonalInformationSchema,
   bankInformation: BankInformationSchema,
   additionalInformation: AdditionalInformationSchema.optional(),
-  spouseInformation: ContactInformationSchema.optional(),
-  emergencyContact: ContactInformationSchema,
+  // spouseInformation: ContactInformationSchema.optional(),
+  // emergencyContact: ContactInformationSchema,
+  spouseInformation: SpouseInformationSchema,
+  emergencyContact: EmergencyContactSchema,
   presentAddress: AddressSchema,
   permanentAddress: AddressSchema,
 });
