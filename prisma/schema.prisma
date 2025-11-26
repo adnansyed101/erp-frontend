@@ -93,21 +93,21 @@ model BankInformation {
   bankName      String
   branchName    String
   accountNumber String
-  walletType    String
-  walletNumber  String
+  walletType    String     @default("N/A")
+  walletNumber  String     @default("N/A")
   createdAt     DateTime   @default(now())
   employees     Employee[]
 }
 
 model Employee {
-  id                    String              @id @default(uuid())
-  createdAt             DateTime            @default(now())
+  id                     String                @id @default(uuid())
+  createdAt              DateTime              @default(now())
   // Personal Information Relation
-  personalInformationId String
-  personalInformation   PersonalInformation @relation(fields: [personalInformationId], references: [id])
+  personalInformationId  String
+  personalInformation    PersonalInformation   @relation(fields: [personalInformationId], references: [id])
   // Bank Information Relation
-  bankInformation       BankInformation     @relation(fields: [bankInformationId], references: [id])
-  bankInformationId     String
+  bankInformation        BankInformation       @relation(fields: [bankInformationId], references: [id])
+  bankInformationId      String
   // Addtional Informatio Relation
   addtionalInformationId String                @unique
   additionalInformation  AdditionalInformation @relation(fields: [addtionalInformationId], references: [id], onDelete: Cascade)
