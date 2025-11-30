@@ -33,30 +33,34 @@ import { SpouseInformation } from "@/lib/types/employee.types";
 const SpouseInformationPage = () => {
   const router = useRouter();
   const isSingle = useEmployeeAdditionalInformation(
-    (state) => state.maritalStatus
+    (state) => state.addtionalInformation.maritalStatus
   );
 
   if (isSingle === "Single") {
     return router.push("/hr-management/create-employee/emergency-contact");
   }
 
-  const employeeData = useEmployeeSpouseInformation((state) => state);
+  const employeeData = useEmployeeSpouseInformation(
+    (state) => state.spouseInformation
+  );
+
+  const setData = useEmployeeSpouseInformation((state) => state.setData);
 
   const form = useForm<SpouseInformation>({
     resolver: zodResolver(SpouseInformationSchema),
     defaultValues: {
-      fullName: employeeData.fullName || "",
-      dateOfBirth: employeeData.dateOfBirth || new Date(),
-      gender: employeeData.gender || "Female",
-      occupation: employeeData.occupation || "",
-      nid: employeeData.nid || "",
-      mobileNumber: employeeData.mobileNumber || "",
-      email: employeeData.email || "",
+      fullName: employeeData?.fullName || "",
+      dateOfBirth: employeeData?.dateOfBirth || new Date(),
+      gender: employeeData?.gender || "Female",
+      occupation: employeeData?.occupation || "",
+      nid: employeeData?.nid || "",
+      mobileNumber: employeeData?.mobileNumber || "",
+      email: employeeData?.email || "",
     },
   });
 
   const onSubmit = (data: SpouseInformation) => {
-    employeeData.setData(data);
+    setData(data);
 
     return router.push("/hr-management/create-employee/emergency-contact");
   };

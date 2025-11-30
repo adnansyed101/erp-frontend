@@ -24,13 +24,17 @@ import {
 import { Button } from "@/components/ui/button";
 import { useBankInformationState } from "@/app/stores/employee.store";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { BankInformation } from "@/lib/types/employee.types";
+import ConfirmationModal from "./components/confirmation-modal";
+import { useState } from "react";
 
 const BankInformationPage = () => {
-  const router = useRouter();
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
-  const employeeInformation = useBankInformationState((state) => state);
+  const employeeInformation = useBankInformationState(
+    (state) => state.bankInformation
+  );
+  const setData = useBankInformationState((state) => state.setData);
 
   const form = useForm<BankInformation>({
     resolver: zodResolver(BankInformationSchema),
@@ -44,8 +48,9 @@ const BankInformationPage = () => {
   });
 
   const onSubmit = (data: BankInformation) => {
-    employeeInformation.setData(data);
-    return router.push("/hr-management/employee-list");
+    setData(data);
+
+    return setIsConfirmed(true);
   };
 
   const handleResetButton = () => {
@@ -151,7 +156,14 @@ const BankInformationPage = () => {
             </div>
 
             <div className="space-x-2">
-              <Button type="submit">Confirm</Button>
+              {isConfirmed ? (
+                <ConfirmationModal
+                  setIsConfirmed={setIsConfirmed}
+                  resetForm={form.reset}
+                />
+              ) : (
+                <Button type="submit">Confirm</Button>
+              )}
               <Button
                 type="button"
                 variant="destructive"

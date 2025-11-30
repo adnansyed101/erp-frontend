@@ -31,8 +31,9 @@ const AdditionalInformationPage = () => {
   const router = useRouter();
 
   const additionalInformation = useEmployeeAdditionalInformation(
-    (state) => state
+    (state) => state.addtionalInformation
   );
+  const setData = useEmployeeAdditionalInformation((state) => state.setData);
 
   const form = useForm<AddtionalInformation>({
     resolver: zodResolver(AdditionalInformationSchema),
@@ -51,7 +52,7 @@ const AdditionalInformationPage = () => {
   });
 
   const onSubmit = (data: AddtionalInformation) => {
-    additionalInformation.setData(data);
+    setData(data);
 
     return router.push("/hr-management/create-employee/permanent-address");
   };

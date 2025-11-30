@@ -35,7 +35,8 @@ import { EmergencyContact } from "@/lib/types/employee.types";
 const EmergencyContactPage = () => {
   const router = useRouter();
 
-  const emergencyContact = useEmployeeEmergencyContact((state) => state);
+  const emergencyContact = useEmployeeEmergencyContact((state) => state.emergencyContact);
+  const setData = useEmployeeEmergencyContact(state => state.setData)
 
   const form = useForm<EmergencyContact>({
     resolver: zodResolver(EmergencyContactSchema),
@@ -51,7 +52,7 @@ const EmergencyContactPage = () => {
   });
 
   const onSubmit = (data: EmergencyContact) => {
-    emergencyContact.setData(data);
+    setData(data);
 
     return router.push("/hr-management/create-employee/bank-information");
   };

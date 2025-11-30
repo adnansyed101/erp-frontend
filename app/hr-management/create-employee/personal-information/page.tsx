@@ -25,11 +25,7 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import CreateEmployeeSteps from "../component/create-employee-steps";
 import { useRouter } from "next/navigation";
 import { useEmployeePersonalInformationDataStore } from "@/app/stores/employee.store";
-import {
-  EmployeeSchema,
-  PersonalInformationSchema,
-} from "@/lib/validators/employee.validator";
-import type { Employee } from "@/lib/types/types.ts";
+import { PersonalInformationSchema } from "@/lib/validators/employee.validator";
 import Image from "next/image";
 import { UploadButton } from "@/lib/uploadthing";
 import { toast } from "sonner";
@@ -38,7 +34,10 @@ import { PersonalInformation } from "@/lib/types/employee.types";
 const PersonalInformationPage = () => {
   const router = useRouter();
   const employeeData = useEmployeePersonalInformationDataStore(
-    (state) => state
+    (state) => state.personalInformation
+  );
+  const setData = useEmployeePersonalInformationDataStore(
+    (state) => state.setData
   );
 
   // Form Data
@@ -65,7 +64,7 @@ const PersonalInformationPage = () => {
   });
 
   const onSubmit = (data: PersonalInformation) => {
-    employeeData.setData(data);
+    setData(data);
     return router.push("/hr-management/create-employee/additional-information");
   };
 
@@ -85,20 +84,6 @@ const PersonalInformationPage = () => {
             className="space-y-2 lg:space-y-6"
           >
             <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-              {/* Full Name Input */}
-              {/* <FormField
-                control={form.control}
-                name="imageUrl"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Image URL</FormLabel>
-                    <FormControl>
-                      <Input placeholder="johndoe.jpg" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
               {/* Full Name Input */}
               <FormField
                 control={form.control}

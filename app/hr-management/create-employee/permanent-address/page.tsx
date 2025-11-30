@@ -22,7 +22,10 @@ import { PermanentAddress } from "@/lib/types/employee.types";
 
 const PermanentAddressPage = () => {
   const router = useRouter();
-  const employeeData = useEmployeePermanentAddress((state) => state);
+  const employeeData = useEmployeePermanentAddress(
+    (state) => state.permanentAddress
+  );
+  const setData = useEmployeePermanentAddress((state) => state.setData);
 
   const form = useForm<PermanentAddress>({
     resolver: zodResolver(PermanentAddressSchema),
@@ -39,7 +42,7 @@ const PermanentAddressPage = () => {
   });
 
   const onSubmit = (data: PermanentAddress) => {
-    employeeData.setData(data);
+    setData(data);
     return router.push("/hr-management/create-employee/present-address");
   };
 
