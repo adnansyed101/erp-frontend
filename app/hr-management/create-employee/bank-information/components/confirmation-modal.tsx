@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  useBankInformationState,
-  useEmployeeAdditionalInformation,
-  useEmployeeEmergencyContact,
-  useEmployeePermanentAddress,
-  useEmployeePersonalInformationDataStore,
-  useEmployeePresentAddress,
-  useEmployeeSpouseInformation,
-} from "@/app/stores/employee.store";
+import { useEmployeeStore } from "@/app/stores/employee.store";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,6 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { createEmployee } from "@/lib/actions/employee.action";
+import { useRouter } from "next/router";
 import { Dispatch, SetStateAction } from "react";
 import { toast } from "sonner";
 
@@ -34,54 +27,8 @@ const ConfirmationModal = ({
   setIsConfirmed,
   resetForm,
 }: ConfirmationModalProps) => {
-  const personalInformation = useEmployeePersonalInformationDataStore(
-    (state) => state.personalInformation
-  );
-  const additionalInformation = useEmployeeAdditionalInformation(
-    (state) => state.addtionalInformation
-  );
-  const presentAddress = useEmployeePresentAddress(
-    (state) => state.presentAddress
-  );
-  const permanentAddress = useEmployeePermanentAddress(
-    (state) => state.permanentAddress
-  );
-  const spouseInformation = useEmployeeSpouseInformation(
-    (state) => state.spouseInformation
-  );
-  const emergencyContact = useEmployeeEmergencyContact(
-    (state) => state.emergencyContact
-  );
-  const bankInformation = useBankInformationState(
-    (state) => state.bankInformation
-  );
-
-  const stores = [
-    useEmployeePersonalInformationDataStore,
-    useEmployeeAdditionalInformation,
-    useEmployeePresentAddress,
-    useEmployeePermanentAddress,
-    useEmployeeSpouseInformation,
-    useEmployeeEmergencyContact,
-    useBankInformationState,
-  ];
-
-  function resetStores() {
-    stores.forEach((store) => {
-      store.persist.clearStorage();
-      store.setState(store.getInitialState());
-    });
-  }
-
-  const employeeData = {
-    personalInformation,
-    additionalInformation,
-    presentAddress,
-    permanentAddress,
-    spouseInformation,
-    emergencyContact,
-    bankInformation,
-  };
+  const employeeData = useEmployeeStore((state) => state.formData);
+  const router = useRouter();
 
   const handleContinue = async () => {
     await createEmployee(employeeData);
@@ -89,29 +36,11 @@ const ConfirmationModal = ({
     toast.success(`Employee Created Successfully.`);
 
     resetForm();
-    resetStores();
+    useEmployeeStore.persist.clearStorage();
+    useEmployeeStore.setState(useEmployeeStore.getInitialState());
+    setIsConfirmed(false);
 
-    useEmployeePersonalInformationDataStore.setState(
-      useEmployeePersonalInformationDataStore.getInitialState()
-    );
-    useEmployeeAdditionalInformation.setState(
-      useEmployeeAdditionalInformation.getInitialState()
-    );
-    useEmployeePresentAddress.setState(
-      useEmployeePresentAddress.getInitialState()
-    );
-    useEmployeePermanentAddress.setState(
-      useEmployeePermanentAddress.getInitialState()
-    );
-    useEmployeeSpouseInformation.setState(
-      useEmployeeSpouseInformation.getInitialState()
-    );
-    useEmployeeEmergencyContact.setState(
-      useEmployeeEmergencyContact.getInitialState()
-    );
-    useBankInformationState.setState(useBankInformationState.getInitialState());
-
-    return setIsConfirmed(false);
+    return router.push("/hr-management/employee-list");
   };
 
   return (
