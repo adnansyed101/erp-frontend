@@ -7,7 +7,11 @@ import { EmployeeSchema } from "../validators/employee.validator";
 
 // Get all employees.
 export async function getEmployees() {
-  const data = await prisma.employee.findMany({});
+  const data = await prisma.employee.findMany({
+    include: {
+      personalInformation: true,
+    },
+  });
 
   return convertToPlainObject(data);
 }
@@ -56,6 +60,7 @@ export async function createEmployee(data: z.infer<typeof EmployeeSchema>) {
     });
     return convertToPlainObject(newEmployee);
   } catch (error) {
+    console.log(error);
     return { success: false, message: formatError(error) };
   }
 }
