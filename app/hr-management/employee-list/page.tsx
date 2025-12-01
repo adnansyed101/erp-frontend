@@ -1,3 +1,4 @@
+import { Employee } from "@/lib/types/types";
 import { EmployeeCard } from "./components/employee-card";
 import { getEmployees } from "@/lib/actions/employee.action";
 
@@ -13,12 +14,12 @@ const EmployeeListPage = async () => {
           <EmployeeCard
             key={employee.id}
             id={employee.id || "1"}
-            imgUrl={employee.imageUrl}
-            fullName={employee.fullName}
-            officeEmail={employee.officeEmail}
-            personalNumber={employee.personalNumber}
-            currentDesignation={employee.currentDesignation}
-            jobTitle={employee.branchName}
+            imgUrl={employee.personalInformation.imageUrl}
+            fullName={employee.personalInformation.fullName}
+            officeEmail={employee.personalInformation.officeEmail}
+            personalNumber={employee.personalInformation.personalNumber}
+            currentDesignation={employee.personalInformation.currentDesignation}
+            jobTitle={employee.personalInformation.joiningDesignation}
           />
         ))}
       </div>
