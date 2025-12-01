@@ -72,10 +72,6 @@ export const SpouseInformationSchema = z.object({
   email: z.email().optional(),
 });
 
-// export const SpouseInformationSchema = ContactInformationSchema.optional();
-
-// export const EmergencyContactSchema = ContactInformationSchema;
-
 export const BankInformationSchema = z.object({
   bankName: z.string().min(1, "Bank name is required."),
   branchName: z.string().min(1, "Branch name is required."),
@@ -87,9 +83,7 @@ export const BankInformationSchema = z.object({
 export const EmployeeSchema = z.object({
   personalInformation: PersonalInformationSchema,
   bankInformation: BankInformationSchema,
-  additionalInformation: AdditionalInformationSchema.optional(),
-  // spouseInformation: ContactInformationSchema.optional(),
-  // emergencyContact: ContactInformationSchema,
+  additionalInformation: AdditionalInformationSchema,
   spouseInformation: SpouseInformationSchema,
   emergencyContact: EmergencyContactSchema,
   presentAddress: AddressSchema,
