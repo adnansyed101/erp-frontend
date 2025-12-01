@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { useBankInformationState } from "@/app/stores/employee.store";
+import { useEmployeeStore } from "@/app/stores/employee.store";
 import { toast } from "sonner";
 import { BankInformation } from "@/lib/types/employee.types";
 import ConfirmationModal from "./components/confirmation-modal";
@@ -31,10 +31,10 @@ import { useState } from "react";
 const BankInformationPage = () => {
   const [isConfirmed, setIsConfirmed] = useState(false);
 
-  const employeeInformation = useBankInformationState(
-    (state) => state.bankInformation
+  const employeeInformation = useEmployeeStore(
+    (state) => state.formData.bankInformation
   );
-  const setData = useBankInformationState((state) => state.setData);
+  const updateFormData = useEmployeeStore((state) => state.updateFormData);
 
   const form = useForm<BankInformation>({
     resolver: zodResolver(BankInformationSchema),
@@ -48,7 +48,7 @@ const BankInformationPage = () => {
   });
 
   const onSubmit = (data: BankInformation) => {
-    setData(data);
+    updateFormData("bankInformation", data);
 
     return setIsConfirmed(true);
   };

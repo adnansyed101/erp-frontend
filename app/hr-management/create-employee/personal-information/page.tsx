@@ -24,7 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import CreateEmployeeSteps from "../component/create-employee-steps";
 import { useRouter } from "next/navigation";
-import { useEmployeePersonalInformationDataStore } from "@/app/stores/employee.store";
+import { useEmployeeStore } from "@/app/stores/employee.store";
 import { PersonalInformationSchema } from "@/lib/validators/employee.validator";
 import Image from "next/image";
 import { UploadButton } from "@/lib/uploadthing";
@@ -33,12 +33,10 @@ import { PersonalInformation } from "@/lib/types/employee.types";
 
 const PersonalInformationPage = () => {
   const router = useRouter();
-  const employeeData = useEmployeePersonalInformationDataStore(
-    (state) => state.personalInformation
+  const employeeData = useEmployeeStore(
+    (state) => state.formData.personalInformation
   );
-  const setData = useEmployeePersonalInformationDataStore(
-    (state) => state.setData
-  );
+  const updateFormData = useEmployeeStore((state) => state.updateFormData);
 
   // Form Data
   const form = useForm<PersonalInformation>({
@@ -64,7 +62,7 @@ const PersonalInformationPage = () => {
   });
 
   const onSubmit = (data: PersonalInformation) => {
-    setData(data);
+    updateFormData("personalInformation", data);
     return router.push("/hr-management/create-employee/additional-information");
   };
 

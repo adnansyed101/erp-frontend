@@ -23,28 +23,24 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import {
-  useEmployeeAdditionalInformation,
-  useEmployeePersonalInformationDataStore,
-  useEmployeeSpouseInformation,
-} from "@/app/stores/employee.store";
+import { useEmployeeStore } from "@/app/stores/employee.store";
 import { SpouseInformation } from "@/lib/types/employee.types";
 
 const SpouseInformationPage = () => {
   const router = useRouter();
-  const isSingle = useEmployeeAdditionalInformation(
-    (state) => state.addtionalInformation.maritalStatus
+  const isSingle = useEmployeeStore(
+    (state) => state.formData.additionalInformation.maritalStatus
   );
 
   if (isSingle === "Single") {
     return router.push("/hr-management/create-employee/emergency-contact");
   }
 
-  const employeeData = useEmployeeSpouseInformation(
-    (state) => state.spouseInformation
+  const employeeData = useEmployeeStore(
+    (state) => state.formData.spouseInformation
   );
 
-  const setData = useEmployeeSpouseInformation((state) => state.setData);
+  const updateFormData = useEmployeeStore((state) => state.updateFormData);
 
   const form = useForm<SpouseInformation>({
     resolver: zodResolver(SpouseInformationSchema),
@@ -60,7 +56,7 @@ const SpouseInformationPage = () => {
   });
 
   const onSubmit = (data: SpouseInformation) => {
-    setData(data);
+    updateFormData("spouseInformation", data);
 
     return router.push("/hr-management/create-employee/emergency-contact");
   };

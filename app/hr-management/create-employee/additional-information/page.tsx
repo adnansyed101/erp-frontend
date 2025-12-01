@@ -24,16 +24,16 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useEmployeeAdditionalInformation } from "@/app/stores/employee.store";
+import { useEmployeeStore } from "@/app/stores/employee.store";
 import { AddtionalInformation } from "@/lib/types/employee.types";
 
 const AdditionalInformationPage = () => {
   const router = useRouter();
 
-  const additionalInformation = useEmployeeAdditionalInformation(
-    (state) => state.addtionalInformation
+  const additionalInformation = useEmployeeStore(
+    (state) => state.formData.additionalInformation
   );
-  const setData = useEmployeeAdditionalInformation((state) => state.setData);
+  const updateFormData = useEmployeeStore((state) => state.updateFormData);
 
   const form = useForm<AddtionalInformation>({
     resolver: zodResolver(AdditionalInformationSchema),
@@ -52,7 +52,7 @@ const AdditionalInformationPage = () => {
   });
 
   const onSubmit = (data: AddtionalInformation) => {
-    setData(data);
+    updateFormData("additionalInformation", data);
 
     return router.push("/hr-management/create-employee/permanent-address");
   };

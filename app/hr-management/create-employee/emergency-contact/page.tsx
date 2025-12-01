@@ -28,15 +28,16 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useEmployeeEmergencyContact } from "@/app/stores/employee.store";
-import { Employee } from "@/lib/types/types";
+import { useEmployeeStore } from "@/app/stores/employee.store";
 import { EmergencyContact } from "@/lib/types/employee.types";
 
 const EmergencyContactPage = () => {
   const router = useRouter();
 
-  const emergencyContact = useEmployeeEmergencyContact((state) => state.emergencyContact);
-  const setData = useEmployeeEmergencyContact(state => state.setData)
+  const emergencyContact = useEmployeeStore(
+    (state) => state.formData.emergencyContact
+  );
+  const updateFormData = useEmployeeStore((state) => state.updateFormData);
 
   const form = useForm<EmergencyContact>({
     resolver: zodResolver(EmergencyContactSchema),
@@ -52,7 +53,7 @@ const EmergencyContactPage = () => {
   });
 
   const onSubmit = (data: EmergencyContact) => {
-    setData(data);
+    updateFormData("emergencyContact", data);
 
     return router.push("/hr-management/create-employee/bank-information");
   };

@@ -16,15 +16,15 @@ import { Card, CardTitle } from "@/components/ui/card";
 import CreateEmployeeSteps from "../component/create-employee-steps";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useEmployeePresentAddress } from "@/app/stores/employee.store";
+import { useEmployeeStore } from "@/app/stores/employee.store";
 import { PermanentAddress } from "@/lib/types/employee.types";
 
 const PresentAddressPage = () => {
   const router = useRouter();
-  const employeeData = useEmployeePresentAddress(
-    (state) => state.presentAddress
+  const employeeData = useEmployeeStore(
+    (state) => state.formData.presentAddress
   );
-  const setData = useEmployeePresentAddress((state) => state.setData);
+  const updateFormData = useEmployeeStore((state) => state.updateFormData);
 
   const form = useForm<PermanentAddress>({
     resolver: zodResolver(PermanentAddressSchema),
@@ -41,7 +41,7 @@ const PresentAddressPage = () => {
   });
 
   const onSubmit = (data: PermanentAddress) => {
-    setData(data);
+    updateFormData("presentAddress", data);
 
     return router.push("/hr-management/create-employee/spouse-information");
   };

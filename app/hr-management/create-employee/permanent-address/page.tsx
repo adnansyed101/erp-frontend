@@ -17,15 +17,15 @@ import { Card, CardTitle } from "@/components/ui/card";
 import CreateEmployeeSteps from "../component/create-employee-steps";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { useEmployeePermanentAddress } from "@/app/stores/employee.store";
+import { useEmployeeStore } from "@/app/stores/employee.store";
 import { PermanentAddress } from "@/lib/types/employee.types";
 
 const PermanentAddressPage = () => {
   const router = useRouter();
-  const employeeData = useEmployeePermanentAddress(
-    (state) => state.permanentAddress
+  const employeeData = useEmployeeStore(
+    (state) => state.formData.permanentAddress
   );
-  const setData = useEmployeePermanentAddress((state) => state.setData);
+  const updateFormData = useEmployeeStore((state) => state.updateFormData);
 
   const form = useForm<PermanentAddress>({
     resolver: zodResolver(PermanentAddressSchema),
@@ -42,7 +42,7 @@ const PermanentAddressPage = () => {
   });
 
   const onSubmit = (data: PermanentAddress) => {
-    setData(data);
+    updateFormData("permanentAddress", data);
     return router.push("/hr-management/create-employee/present-address");
   };
 
