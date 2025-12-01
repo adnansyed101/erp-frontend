@@ -17,7 +17,7 @@ import { Links } from "@/lib/types/types";
 const user = {
   name: "Md Adnan",
   email: "adnan.arbree.solutions@gmail.com",
-  avatar: "/avatars/shadcn.jpg",
+  avatar: "/demo.jpg",
   role: "hr",
 };
 
