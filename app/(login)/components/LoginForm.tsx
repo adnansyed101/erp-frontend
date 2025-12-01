@@ -43,6 +43,7 @@ export default function LoginForm() {
                   id="email"
                   type="email"
                   placeholder="m@example.com"
+                  value="admin@gmail.com"
                   required
                 />
               </Field>
