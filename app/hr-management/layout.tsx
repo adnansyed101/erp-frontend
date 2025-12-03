@@ -23,7 +23,7 @@ export default function HRManagementLayout({
         },
         {
           title: "Personal Information",
-          url: "/hr-management",
+          url: "/hr-management/personal-information-management",
           icon: User,
         },
         {
