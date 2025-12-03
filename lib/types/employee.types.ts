@@ -4,6 +4,7 @@ import {
   BankInformationSchema,
   EmergencyContactSchema,
   EmployeeSchema,
+  EmployeeSchemaWithId,
   PermanentAddressSchema,
   PersonalInformationSchema,
   PresentAddressSchema,
@@ -21,3 +22,5 @@ export type SpouseInformation = z.infer<typeof SpouseInformationSchema>;
 export type EmergencyContact = z.infer<typeof EmergencyContactSchema>;
 
 export type Employee = z.infer<typeof EmployeeSchema>;
+
+export type EmployeeWithId = z.infer<typeof EmployeeSchemaWithId>

@@ -81,7 +81,6 @@ export const BankInformationSchema = z.object({
 });
 
 export const EmployeeSchema = z.object({
-  id: z.string().optional(),
   personalInformation: PersonalInformationSchema,
   bankInformation: BankInformationSchema,
   additionalInformation: AdditionalInformationSchema,
@@ -89,4 +88,8 @@ export const EmployeeSchema = z.object({
   emergencyContact: EmergencyContactSchema,
   presentAddress: AddressSchema,
   permanentAddress: AddressSchema,
+});
+
+export const EmployeeSchemaWithId = EmployeeSchema.extend({
+  id: z.string(),
 });
