@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Home, Plus, UserRoundPen } from "lucide-react";
 import { NavMain } from "@/components/sidebar/nav-main";
 import { NavUser } from "@/components/sidebar/nav-user";
 import {

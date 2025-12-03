@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Mail, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 
 export interface EmployeeCardProps {
   id: string;
@@ -25,7 +26,7 @@ export function EmployeeCard({
   return (
     <Card className="w-full max-w-sm overflow-hidden pt-0">
       <CardHeader className="p-0">
-        <img
+        <Image
           src={imgUrl || "/placeholder.svg"}
           alt={fullName}
           className="w-full h-60 object-cover rounded-t-2xl"

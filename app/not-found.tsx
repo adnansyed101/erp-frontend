@@ -15,7 +15,7 @@ export default function NotFound() {
         {/* Message */}
         <h2 className="text-3xl font-bold mb-3">Page Not Found</h2>
         <p className="mb-8 leading-relaxed">
-          The page you're looking for doesn't exist or has been moved. Let's get
+          The page you&apos;re looking for doesn&apos;t exist or has been moved. Let&apos;s get
           you back on track.
         </p>
 

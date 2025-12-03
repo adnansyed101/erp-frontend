@@ -371,7 +371,7 @@ const PersonalInformationPage = () => {
               <FormField
                 control={form.control}
                 name="imageUrl"
-                render={({ field }) => (
+                render={() => (
                   <FormItem className="w-full">
                     <FormLabel>Images</FormLabel>
                     <Card>

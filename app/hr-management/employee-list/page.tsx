@@ -1,4 +1,3 @@
-import { Employee } from "@/lib/types/types";
 import { EmployeeCard } from "./components/employee-card";
 import { getEmployees } from "@/lib/actions/employee.action";
 

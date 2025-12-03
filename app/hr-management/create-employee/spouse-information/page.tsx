@@ -31,17 +31,11 @@ const SpouseInformationPage = () => {
   const isSingle = useEmployeeStore(
     (state) => state.formData.additionalInformation.maritalStatus
   );
-
-  if (isSingle === "Single") {
-    return router.push("/hr-management/create-employee/emergency-contact");
-  }
-
   const employeeData = useEmployeeStore(
     (state) => state.formData.spouseInformation
   );
 
   const updateFormData = useEmployeeStore((state) => state.updateFormData);
-
   const form = useForm<SpouseInformation>({
     resolver: zodResolver(SpouseInformationSchema),
     defaultValues: {
@@ -54,6 +48,10 @@ const SpouseInformationPage = () => {
       email: employeeData?.email || "",
     },
   });
+
+  if (isSingle === "Single") {
+    return router.push("/hr-management/create-employee/emergency-contact");
+  }
 
   const onSubmit = (data: SpouseInformation) => {
     updateFormData("spouseInformation", data);

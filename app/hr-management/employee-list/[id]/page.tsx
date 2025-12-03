@@ -5,7 +5,6 @@ import {
   Phone,
   Briefcase,
   Building,
-  User,
   MapPin,
   Banknote,
   Users,
@@ -17,6 +16,7 @@ import { notFound } from "next/navigation";
 
 import { format } from "date-fns";
 import { getEmployeeById } from "@/lib/actions/employee.action";
+import Image from "next/image";
 
 const EmployeeDetailsPage = async (props: {
   params: Promise<{ id: string }>;
@@ -41,7 +41,7 @@ const EmployeeDetailsPage = async (props: {
         {/* Header Card */}
         <Card className="overflow-hidden mb-8 pt-0">
           <CardHeader className="p-0">
-            <img
+            <Image
               src={employee.personalInformation.imageUrl || "/placeholder.svg"}
               alt={employee.personalInformation.fullName}
               className="w-full h-auto object-cover"

@@ -92,7 +92,7 @@ const initialFormState: Employee = {
 
 export const useEmployeeStore = create<FormState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       currentStep: 1,
       formData: initialFormState,
       updateFormData: (key, data) =>

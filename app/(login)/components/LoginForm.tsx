@@ -57,7 +57,7 @@ export default function LoginForm() {
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input id="password" type="password" required value="123456789" />
               </Field>
               <Field>
                 <Button type="submit">Login</Button>

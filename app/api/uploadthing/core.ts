@@ -1,5 +1,4 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
-import { UploadThingError } from "uploadthing/server";
 
 const f = createUploadthing();
 
@@ -10,6 +9,7 @@ export const ourFileRouter = {
       maxFileSize: "4MB",
     },
   }).onUploadComplete(({ metadata, file }) => {
+    console.log(metadata);
     return console.log(file);
   }),
 } satisfies FileRouter;

@@ -2,11 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
-import z from "zod";
-import {
-  EmergencyContactSchema,
-  EmployeeSchema,
-} from "@/lib/validators/employee.validator";
+import { EmergencyContactSchema } from "@/lib/validators/employee.validator";
 import {
   Form,
   FormControl,
