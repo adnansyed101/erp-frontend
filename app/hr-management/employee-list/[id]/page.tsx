@@ -40,11 +40,12 @@ const EmployeeDetailsPage = async (props: {
 
         {/* Header Card */}
         <Card className="overflow-hidden mb-8 pt-0">
-          <CardHeader className="p-0">
+          <CardHeader className="p-0 relative h-80">
             <Image
               src={employee.personalInformation.imageUrl || "/placeholder.svg"}
               alt={employee.personalInformation.fullName}
-              className="w-full h-auto object-cover"
+              className="w-full object-cover absolute"
+              fill
             />
           </CardHeader>
 

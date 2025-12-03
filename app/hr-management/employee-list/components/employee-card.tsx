@@ -26,11 +26,14 @@ export function EmployeeCard({
   return (
     <Card className="w-full max-w-sm overflow-hidden pt-0">
       <CardHeader className="p-0">
-        <Image
-          src={imgUrl || "/placeholder.svg"}
-          alt={fullName}
-          className="w-full h-60 object-cover rounded-t-2xl"
-        />
+        <div className="relative h-60">
+          <Image
+            src={imgUrl || "/placeholder.svg"}
+            alt={fullName}
+            fill={true}
+            className="w-full object-fit rounded-t-2xl absolute"
+          />
+        </div>
       </CardHeader>
       <CardContent className="p-6">
         {/* Employee Name */}
