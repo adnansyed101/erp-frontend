@@ -1,5 +1,5 @@
-import { Home, Logs, User } from "lucide-react";
-import { Links } from "@/lib/types/types"; 
+import { Home, ListCheck, Logs, User } from "lucide-react";
+import { Links } from "@/lib/types/types";
 import MainLayout from "../provider/MainLayout";
 
 export default function HRManagementLayout({
@@ -23,8 +23,13 @@ export default function HRManagementLayout({
         },
         {
           title: "Personal Information",
-          url: "/hr-management/personal-information-management",
+          url: "/hr-management",
           icon: User,
+        },
+        {
+          title: "Attendance",
+          url: "/hr-management/attendance-management",
+          icon: ListCheck,
         },
       ],
     },
