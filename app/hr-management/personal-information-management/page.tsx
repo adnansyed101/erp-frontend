@@ -1,5 +1,5 @@
 import { UserPlus } from "lucide-react";
-import ManagementCard from "./components/management-card";
+import ActivityCard from "@/components/cards/activity-card";
 
 const PersonalInformationPage = () => {
   const activities = [
@@ -22,7 +22,7 @@ const PersonalInformationPage = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {activities.map((activity) => (
-          <ManagementCard key={activity.title} {...activity} />
+          <ActivityCard key={activity.title} {...activity} />
         ))}
       </div>
     </main>
