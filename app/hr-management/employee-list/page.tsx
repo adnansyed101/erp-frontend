@@ -2,8 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { EmployeeCard } from "./components/employee-card";
-import { Employee } from "@/lib/types/types";
-import { PersonalInformation } from "@/lib/types/employee.types";
+import { EmployeeWithId } from "@/lib/types/employee.types";
 
 const EmployeeListPage = () => {
   const {
@@ -16,7 +15,7 @@ const EmployeeListPage = () => {
     queryFn: async (): Promise<{
       success: boolean;
       message: string;
-      data: Employee[];
+      data: EmployeeWithId[];
     }> => {
       const response = await fetch(`/api/hr-management/employees`);
 
@@ -38,7 +37,7 @@ const EmployeeListPage = () => {
           "Loading...."
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {employees.data.map((employee: Employee) => (
+            {employees.data.map((employee: EmployeeWithId) => (
               <EmployeeCard
                 key={employee.id}
                 id={employee.id || "1"}
