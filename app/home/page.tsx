@@ -20,9 +20,9 @@ import {
   Home,
   Settings,
 } from "lucide-react";
-import ActivityCard from "./components/activity-card";
 import MainLayout from "../provider/MainLayout";
-import { Links } from "@/lib/types/types"; 
+import { Links } from "@/lib/types/types";
+import ActivityCard from "@/components/cards/activity-card";
 
 const activities = [
   {
@@ -37,7 +37,7 @@ const activities = [
   },
   {
     icon: Briefcase,
-    title: "HR Management System",
+    title: "Human Resource Management System",
     link: "/hr-management",
   },
   {
@@ -143,7 +143,7 @@ export default function HomePage() {
 
   return (
     <MainLayout links={links}>
-      <main className="min-h-screen bg-background py-12 px-4">
+      <main className="min-h-screen bg-background pb-12 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="mb-12 text-center">
             <h1 className="text-4xl font-bold text-foreground mb-4">
