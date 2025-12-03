@@ -1,6 +1,4 @@
 import { LucideIcon } from "lucide-react";
-import z from "zod";
-import { EmployeeSchema } from "../validators/employee.validator";
 
 export type Links = {
   label: string;
@@ -11,5 +9,3 @@ export type Links = {
     isActive?: boolean;
   }[];
 }[];
-
-export type Employee = z.infer<typeof EmployeeSchema>;
