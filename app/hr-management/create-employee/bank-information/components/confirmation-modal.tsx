@@ -1,5 +1,3 @@
-"use client";
-
 import { useEmployeeStore } from "@/app/stores/employee.store";
 import {
   AlertDialog,
@@ -13,8 +11,9 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { createEmployee } from "@/lib/actions/employee.action";
-import { useRouter } from "next/router";
+import { Employee } from "@/lib/types/types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
 import { toast } from "sonner";
 
@@ -29,9 +28,38 @@ const ConfirmationModal = ({
 }: ConfirmationModalProps) => {
   const employeeData = useEmployeeStore((state) => state.formData);
   const router = useRouter();
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationKey: ["employees"],
+    mutationFn: async (newEmployee: Employee) => {
+      const response = await fetch(`/api/hr-management/employees`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newEmployee),
+      });
+      if (!response.ok) {
+        return console.log("Error occured in creating employee.");
+      }
+
+      console.log(response);
+
+      return response;
+    },
+    onSuccess: () => {
+      // Invalidate and refetch queries after a successful mutation
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
+      toast.success("Employee created");
+    },
+    onError: (error) => {
+      alert(`Error creating post: ${error.message}`);
+    },
+  });
 
   const handleContinue = async () => {
-    await createEmployee(employeeData);
+    mutate(employeeData);
 
     toast.success(`Employee Created Successfully.`);
 
