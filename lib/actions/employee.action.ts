@@ -1,9 +1,8 @@
 "use server";
 
-import z from "zod";
 import { prisma } from "../prisma";
 import { convertToPlainObject, formatError } from "../utils";
-import { EmployeeSchema } from "../validators/employee.validator";
+import { Employee } from "../types/types";
 
 // Get all employees.
 export async function getEmployees() {
@@ -17,7 +16,7 @@ export async function getEmployees() {
 }
 
 // Create new employee
-export async function createEmployee(data: z.infer<typeof EmployeeSchema>) {
+export async function createEmployee(data: Employee) {
   try {
     const newEmployee = await prisma.employee.create({
       data: {
@@ -60,7 +59,23 @@ export async function createEmployee(data: z.infer<typeof EmployeeSchema>) {
     });
     return convertToPlainObject(newEmployee);
   } catch (error) {
-    console.log(error);
     return { success: false, message: formatError(error) };
   }
+}
+
+export async function getEmployeeById(id: string) {
+  const employeeById = await prisma.employee.findFirst({
+    where: { id: id },
+    include: {
+      personalInformation: true,
+      presentAddress: true,
+      permanentAddress: true,
+      spouseInformation: true,
+      emergencyContact: true,
+      additionalInformation: true,
+      bankInformation: true,
+    },
+  });
+ 
+  return convertToPlainObject(employeeById)
 }
