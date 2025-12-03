@@ -1,26 +1,59 @@
-import { EmployeeCard } from "./components/employee-card";
-import { getEmployees } from "@/lib/actions/employee.action";
+"use client";
 
-const EmployeeListPage = async () => {
-  const employees = await getEmployees();
+import { useQuery } from "@tanstack/react-query";
+import { EmployeeCard } from "./components/employee-card";
+import { Employee } from "@/lib/types/types";
+import { PersonalInformation } from "@/lib/types/employee.types";
+
+const EmployeeListPage = () => {
+  const {
+    data: employees,
+    isPending,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["employees"],
+    queryFn: async (): Promise<{
+      success: boolean;
+      message: string;
+      data: Employee[];
+    }> => {
+      const response = await fetch(`/api/hr-management/employees`);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch all employee");
+      }
+
+      return response.json();
+    },
+  });
+
+  if (error) return "An error has occurred: " + error.message;
 
   return (
     <main>
       <h1 className="text-4xl font-bold text-foreground mb-4">Employee List</h1>
-      {employees.length === 0 && <p>No Employees Registered</p>}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {employees.map((employee) => (
-          <EmployeeCard
-            key={employee.id}
-            id={employee.id || "1"}
-            imgUrl={employee.personalInformation.imageUrl}
-            fullName={employee.personalInformation.fullName}
-            officeEmail={employee.personalInformation.officeEmail}
-            personalNumber={employee.personalInformation.personalNumber}
-            currentDesignation={employee.personalInformation.currentDesignation}
-            jobTitle={employee.personalInformation.joiningDesignation}
-          />
-        ))}
+      <div>
+        {isLoading || isPending ? (
+          "Loading...."
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {employees.data.map((employee: Employee) => (
+              <EmployeeCard
+                key={employee.id}
+                id={employee.id || "1"}
+                imgUrl={employee.personalInformation.imageUrl}
+                fullName={employee.personalInformation.fullName}
+                officeEmail={employee.personalInformation.officeEmail}
+                personalNumber={employee.personalInformation.personalNumber}
+                currentDesignation={
+                  employee.personalInformation.currentDesignation
+                }
+                jobTitle={employee.personalInformation.currentDesignation}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </main>
   );
