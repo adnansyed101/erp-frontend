@@ -18,9 +18,9 @@ import { format } from "date-fns";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { Employee } from "@/lib/types/types";
+import { Employee } from "@/lib/types/employee.types";
 
-const EmployeeDetailsPage = async () => {
+const EmployeeDetailsPage = () => {
   const { id } = useParams();
 
   const {
@@ -605,9 +605,7 @@ const EmployeeDetailsPage = async () => {
                           employee.data Status
                         </p>
                         <p className="text-lg font-semibold">
-                          {
-                            employee.data.personalInformation.employeeStatus
-                          }
+                          {employee.data.personalInformation.employeeStatus}
                         </p>
                       </div>
                       <div>
