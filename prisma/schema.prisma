@@ -106,8 +106,8 @@ enum AttendanceStatus {
 
 model Attendance {
   id         String           @id @default(uuid())
-  checkIn    DateTime
-  checkOut   DateTime?
+  checkIn    DateTime         @default(now())
+  checkOut   DateTime?        
   status     AttendanceStatus
   createdAt  DateTime         @default(now())
   employee   Employee?        @relation(fields: [employeeId], references: [id])
