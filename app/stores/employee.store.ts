@@ -36,7 +36,7 @@ const initialFormState: Employee = {
     motherName: "",
     nationalId: "",
     placeOfBirth: "",
-    maritalStatus: "Single",
+    maritalStatus: "Married",
     eTIN: "",
     program: "",
     unit: "",
