@@ -99,6 +99,21 @@ model BankInformation {
   employees     Employee[]
 }
 
+enum AttendanceStatus {
+  In
+  Out
+}
+
+model Attendance {
+  id         String           @id @default(uuid())
+  checkIn    DateTime
+  checkOut   DateTime?
+  status     AttendanceStatus
+  createdAt  DateTime         @default(now())
+  employee   Employee?        @relation(fields: [employeeId], references: [id])
+  employeeId String?
+}
+
 model Employee {
   id                     String                @id @default(uuid())
   createdAt              DateTime              @default(now())
@@ -122,4 +137,6 @@ model Employee {
   // Emergency Contact Relation
   emergencyContact       ContactInformation    @relation(name: "emergencyContact", fields: [emergencyContactId], references: [id], onDelete: Cascade)
   emergencyContactId     String                @unique
+  // Attendance
+  attendance             Attendance[]
 }
