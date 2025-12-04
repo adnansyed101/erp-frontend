@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { Employee } from "@/lib/types/types";
+import { Employee } from "@/lib/types/employee.types";
 
 // Define the shape of your store's state
 type FormState = {
