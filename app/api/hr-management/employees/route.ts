@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { formatError } from "@/lib/utils";
-import { Employee } from "@/lib/types/types";
+import { Employee } from "@/lib/types/employee.types";
 
 export async function GET() {
   try {
