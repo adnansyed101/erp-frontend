@@ -7,7 +7,6 @@ import { LogIn, LogOut, Clock, ChevronDownIcon } from "lucide-react";
 import { SearchDropdown } from "./search-dropdown";
 import { useQuery } from "@tanstack/react-query";
 import { EmployeeWithId } from "@/lib/types/employee.types";
-import { format, formatDate } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Label } from "@/components/ui/label";
@@ -16,10 +15,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { format } from "date-fns";
 
 interface AttendanceFormData {
   loginDate: Date;
-  loginTime: string;
+  loginTime: Date;
   weekDay: string;
   preferableInTime: string;
 }
@@ -27,9 +27,6 @@ interface AttendanceFormData {
 export function ManualAttendanceForm() {
   const {
     data: employees,
-    isPending,
-    isLoading,
-    error,
   } = useQuery({
     queryKey: ["employees"],
     queryFn: async (): Promise<{
@@ -48,6 +45,7 @@ export function ManualAttendanceForm() {
     initialData: { success: false, message: "Fetching Data", data: [] },
   });
   const [open, setOpen] = React.useState(false);
+  const [employee, setEmployee] = React.useState<EmployeeWithId | null>(null)
 
   const weekday = [
     "Sunday",
@@ -61,7 +59,7 @@ export function ManualAttendanceForm() {
 
   const [formData, setFormData] = useState<AttendanceFormData>({
     loginDate: new Date(),
-    loginTime: "",
+    loginTime: new Date(),
     weekDay: weekday[new Date().getDay()],
     preferableInTime: "",
   });
@@ -78,14 +76,11 @@ export function ManualAttendanceForm() {
     e.preventDefault();
 
     console.log("Form data saved:", formData);
-  };
-
-  const handleSearch = (item: any) => {
-    console.log(item);
+    console.log("Form data saved:", employee);
   };
 
   const handleSelect = (value: EmployeeWithId) => {
-    console.log(value);
+    setEmployee(value)
   };
 
   return (
@@ -125,7 +120,6 @@ export function ManualAttendanceForm() {
           <SearchDropdown
             placeholder="Enter Employee Name"
             items={employees.data}
-            onSearch={handleSearch}
             onSelect={handleSelect}
           />
         </div>
@@ -152,7 +146,7 @@ export function ManualAttendanceForm() {
                 className="w-auto overflow-hidden p-0"
                 align="start"
               >
-                <Calendar
+                <Calendar   
                   mode="single"
                   selected={formData.loginDate}
                   captionLayout="dropdown"
@@ -162,6 +156,7 @@ export function ManualAttendanceForm() {
                       loginDate: new Date(),
                     }));
                     setOpen(false);
+                  
                   }}
                 />
               </PopoverContent>
@@ -184,20 +179,20 @@ export function ManualAttendanceForm() {
           </div>
         </div>
         <div>
-          <Label htmlFor="loginTime" className="text-sm font-medium">
-            Login Time<span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="loginTime"
-            name="loginTime"
-            type="time"
-            placeholder="In time"
-            value={formData.loginTime}
-            onChange={handleInputChange}
-            className="mt-1"
-          />
+         <Label htmlFor="time-picker" className="px-1">
+          Time
+        </Label>
+        <Input
+          type="time"
+          id="time-picker"
+          step="1"
+          defaultValue="11:00 AM"
+          value={format(formData.loginTime, "p")}
+          onChange={handleInputChange}
+          className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+        />
         </div>
-        {/* <div>
+        <div>
           <Label htmlFor="preferableInTime" className="text-sm font-medium">
             Preferable In Time
           </Label>
@@ -211,8 +206,11 @@ export function ManualAttendanceForm() {
             className="mt-1"
             
           />
-        </div> */}
-        <Button>Current Time</Button>
+        </div>
+        <Button onClick={()=> setFormData(prev => {
+          console.log("hello")
+          return {...prev, loginTime:new Date()}
+        })}>Current Time</Button>
       </div>
       {/* Save Button */}
       <div className="flex justify-end pt-4 border-t">
