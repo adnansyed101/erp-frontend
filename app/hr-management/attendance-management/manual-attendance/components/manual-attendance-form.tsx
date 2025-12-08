@@ -4,7 +4,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { format, parse, set } from "date-fns";
+import { format } from "date-fns";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { EmployeeWithId } from "@/lib/types/employee.types";
 import { LogIn, LogOut, Clock, ChevronDownIcon } from "lucide-react";
@@ -106,7 +106,7 @@ export function ManualAttendanceForm() {
       values.preferableInTime,
       values.checkInDate
     );
-    
+
     return mutate({
       checkIn: checkInTime,
       preferableInTime: preferableTime,
