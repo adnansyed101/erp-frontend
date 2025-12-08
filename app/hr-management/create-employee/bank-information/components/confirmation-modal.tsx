@@ -41,10 +41,8 @@ const ConfirmationModal = ({
         body: JSON.stringify(newEmployee),
       });
       if (!response.ok) {
-        return console.log("Error occured in creating employee.");
+        return toast.error("Error occured in creating employee.");
       }
-
-      console.log(response);
 
       return response;
     },

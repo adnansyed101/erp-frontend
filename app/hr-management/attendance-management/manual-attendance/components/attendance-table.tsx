@@ -36,7 +36,6 @@ export function AttendanceTable() {
     },
   });
 
-  console.log(attendances);
 
   const handleExcel = () => {
     console.log("Export to Excel");

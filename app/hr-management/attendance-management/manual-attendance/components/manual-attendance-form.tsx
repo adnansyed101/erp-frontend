@@ -79,10 +79,8 @@ export function ManualAttendanceForm() {
         body: JSON.stringify(newAttendance),
       });
       if (!response.ok) {
-        return console.log("Error occured in creating employee.");
+        return toast.error("Error occured in creating employee.");
       }
-
-      console.log(response);
 
       return response;
     },
@@ -108,13 +106,7 @@ export function ManualAttendanceForm() {
       values.preferableInTime,
       values.checkInDate
     );
-    console.log({
-      checkIn: checkInTime,
-      preferableInTime: preferableTime,
-      employeeId: values.employeeId,
-      status: values.status,
-    });
-
+    
     return mutate({
       checkIn: checkInTime,
       preferableInTime: preferableTime,

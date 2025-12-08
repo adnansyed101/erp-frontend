@@ -62,8 +62,9 @@ const EmergencyContactPage = () => {
           Emergency Contact
         </CardTitle>
         <Form {...form}>
+          {/* Put (e) => console.log(e) in form not working */}
           <form
-            onSubmit={form.handleSubmit(onSubmit, (e) => console.log(e))}
+            onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-2 lg:space-y-6"
           >
             <FormField
