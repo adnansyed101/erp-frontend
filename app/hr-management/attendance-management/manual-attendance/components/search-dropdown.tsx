@@ -28,6 +28,7 @@ export function SearchDropdown({
 
   // Filter items based on search value
   useEffect(() => {
+    if(value) setIsOpen(false)
     if (value.trim()) {
       const filtered = items.filter(
         (item) =>
