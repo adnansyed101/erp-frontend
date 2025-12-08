@@ -1,4 +1,5 @@
 import z from "zod";
+import { AttendanceSchema } from "./attendance.schema";
 
 export const PersonalInformationSchema = z.object({
   fullName: z.string().min(2, "At least 2 characters are needed."),
