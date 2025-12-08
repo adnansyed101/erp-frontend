@@ -12,24 +12,31 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-interface AttendanceRecord {
-  id: string;
-  employeeId: string;
-  employeeName: string;
-  designation: string;
-  department: string;
-  loginDate: string;
-  loginTime: string;
-  outTime: string;
-}
+import { useQuery } from "@tanstack/react-query";
+import { AttendanceWithEmployeeData } from "@/lib/types/attendance.type";
+import { format } from "date-fns";
 
 export function AttendanceTable() {
   const [searchTerm, setSearchTerm] = useState("");
   const [entriesPerPage, setEntriesPerPage] = useState(10);
 
-  // Sample data - replace with real data from API
-  const records: AttendanceRecord[] = [];
+  // Get the employees
+  const { data: attendances, isLoading } = useQuery({
+    queryKey: ["attendances-list", searchTerm],
+    queryFn: async (): Promise<{
+      success: boolean;
+      message: string;
+      data: AttendanceWithEmployeeData[];
+    }> => {
+      const response = await fetch(
+        `/api/hr-management/attendance?number=${entriesPerPage}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch employees");
+      return response.json();
+    },
+  });
+
+  console.log(attendances);
 
   const handleExcel = () => {
     console.log("Export to Excel");
@@ -42,6 +49,10 @@ export function AttendanceTable() {
   const handlePrint = () => {
     window.print();
   };
+
+  if (isLoading) {
+    return <p>Loading</p>;
+  }
 
   return (
     <div className="space-y-4">
@@ -112,14 +123,15 @@ export function AttendanceTable() {
               <TableHead className="font-semibold">Employee Id</TableHead>
               <TableHead className="font-semibold">Employee Name</TableHead>
               <TableHead className="font-semibold">Designation</TableHead>
-              <TableHead className="font-semibold">Department</TableHead>
+              <TableHead className="font-semibold">Office Email</TableHead>
               <TableHead className="font-semibold">Login Date</TableHead>
               <TableHead className="font-semibold">Login Time</TableHead>
               <TableHead className="font-semibold">Out Time</TableHead>
+              <TableHead className="font-semibold">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {records.length === 0 ? (
+            {attendances?.data.length === 0 || isLoading ? (
               <TableRow>
                 <TableCell
                   colSpan={7}
@@ -129,15 +141,30 @@ export function AttendanceTable() {
                 </TableCell>
               </TableRow>
             ) : (
-              records.map((record) => (
-                <TableRow key={record.id}>
-                  <TableCell>{record.employeeId}</TableCell>
-                  <TableCell>{record.employeeName}</TableCell>
-                  <TableCell>{record.designation}</TableCell>
-                  <TableCell>{record.department}</TableCell>
-                  <TableCell>{record.loginDate}</TableCell>
-                  <TableCell>{record.loginTime}</TableCell>
-                  <TableCell>{record.outTime}</TableCell>
+              attendances?.data.map((attendance) => (
+                <TableRow key={attendance.id}>
+                  <TableCell>{attendance.id}</TableCell>
+                  <TableCell>
+                    {attendance.employee.personalInformation.fullName}
+                  </TableCell>
+                  <TableCell>
+                    {attendance.employee.personalInformation.currentDesignation}
+                  </TableCell>
+                  <TableCell>
+                    {attendance.employee.personalInformation.officeEmail}
+                  </TableCell>
+                  <TableCell>
+                    {format(attendance.checkIn, "dd/mm/yyyy")}
+                  </TableCell>
+                  <TableCell>{format(attendance.checkIn, "h:m a")}</TableCell>
+                  <TableCell>
+                    {attendance.checkOut
+                      ? format(attendance.checkOut, "h:m a..aa")
+                      : "In"}
+                  </TableCell>
+                  <TableCell>
+                    <Button>Check Out</Button>
+                  </TableCell>
                 </TableRow>
               ))
             )}
@@ -147,10 +174,11 @@ export function AttendanceTable() {
 
       {/* Pagination */}
       <div className="flex items-center justify-between text-sm text-gray-600">
-        <span>
-          Showing {Math.min(records.length, entriesPerPage)} to{" "}
-          {Math.min(records.length, entriesPerPage)} of {records.length} entries
-        </span>
+        {/* <span>
+          Showing {Math.min(attendances.length, entriesPerPage)} to{" "}
+          {Math.min(attendances.length, entriesPerPage)} of {attendances.length}{" "}
+          entries
+        </span> */}
         <div className="flex gap-2">
           <Button variant="outline" size="sm" disabled>
             Previous
