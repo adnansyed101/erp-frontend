@@ -47,7 +47,5 @@ export function formatTime(values: string, today:Date) {
     milliseconds: 0,
   });
 
-  console.log(combined)
-
   return combined;
 }
