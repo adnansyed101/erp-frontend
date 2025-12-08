@@ -1,227 +1,235 @@
 "use client";
 
 import React from "react";
-import { FormEvent, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { LogIn, LogOut, Clock, ChevronDownIcon } from "lucide-react";
-import { SearchDropdown } from "./search-dropdown";
-import { useQuery } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { format, parse, set } from "date-fns";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { EmployeeWithId } from "@/lib/types/employee.types";
+import { LogIn, LogOut, Clock, ChevronDownIcon } from "lucide-react";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { format } from "date-fns";
+import { SearchDropdown } from "./search-dropdown";
+import { Attendance } from "@/lib/types/attendance.type";
+import { toast } from "sonner";
+import { formatTime } from "@/lib/utils";
 
-interface AttendanceFormData {
-  loginDate: Date;
-  loginTime: Date;
-  weekDay: string;
-  preferableInTime: string;
-}
+const attendanceSchema = z.object({
+  employeeId: z.string().min(1, "Employee name is required"),
+  status: z.enum(["In", "Out"]),
+  checkInDate: z.date(),
+  checkInTime: z.string().min(1, "Login time is required"),
+  preferableInTime: z.string(),
+});
+
+type AttendanceFormData = z.infer<typeof attendanceSchema>;
 
 export function ManualAttendanceForm() {
-  const {
-    data: employees,
-  } = useQuery({
-    queryKey: ["employees"],
+  const queryClient = useQueryClient();
+  // Create the form
+  const form = useForm<AttendanceFormData>({
+    resolver: zodResolver(attendanceSchema),
+    defaultValues: {
+      employeeId: "",
+      status: "In",
+      checkInDate: new Date(),
+      checkInTime: format(new Date(), "HH:mm"),
+      preferableInTime: "10:00",
+    },
+  });
+
+  // Get the employees
+  const { data: employees, isLoading } = useQuery({
+    queryKey: ["employees-search"],
     queryFn: async (): Promise<{
       success: boolean;
       message: string;
       data: EmployeeWithId[];
     }> => {
-      const response = await fetch(`/api/hr-management/employees`);
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch all employee");
-      }
-
+      const response = await fetch("/api/hr-management/employees");
+      if (!response.ok) throw new Error("Failed to fetch employees");
       return response.json();
     },
-    initialData: { success: false, message: "Fetching Data", data: [] },
-  });
-  const [open, setOpen] = React.useState(false);
-  const [employee, setEmployee] = React.useState<EmployeeWithId | null>(null)
-
-  const weekday = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-
-  const [formData, setFormData] = useState<AttendanceFormData>({
-    loginDate: new Date(),
-    loginTime: new Date(),
-    weekDay: weekday[new Date().getDay()],
-    preferableInTime: "",
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  // Create new attendance
+  const { mutate } = useMutation({
+    mutationKey: ["employees-search"],
+    mutationFn: async (newAttendance: Attendance) => {
+      const response = await fetch(`/api/hr-management/attendance`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newAttendance),
+      });
+      if (!response.ok) {
+        return console.log("Error occured in creating employee.");
+      }
 
-  const handleSave = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+      console.log(response);
 
-    console.log("Form data saved:", formData);
-    console.log("Form data saved:", employee);
-  };
+      return response;
+    },
+    onSuccess: () => {
+      // Invalidate and refetch queries after a successful mutation
+      queryClient.invalidateQueries({ queryKey: ["attendance"] });
+      queryClient.invalidateQueries({ queryKey: ["attendances-list"] });
 
-  const handleSelect = (value: EmployeeWithId) => {
-    setEmployee(value)
+      toast.success("Employee attendance created");
+    },
+    onError: (error) => {
+      alert(`Error creating attendance: ${error.message}`);
+    },
+  });
+
+  const handleSearch = () => {};
+
+  // Handle submit
+  const onSubmit = (values: AttendanceFormData) => {
+    const checkInTime = formatTime(values.checkInTime, values.checkInDate);
+
+    const preferableTime = formatTime(
+      values.preferableInTime,
+      values.checkInDate
+    );
+    console.log({
+      checkIn: checkInTime,
+      preferableInTime: preferableTime,
+      employeeId: values.employeeId,
+      status: values.status,
+    });
+
+    return mutate({
+      checkIn: checkInTime,
+      preferableInTime: preferableTime,
+      employeeId: values.employeeId,
+      status: values.status,
+    });
   };
 
   return (
-    <form className="space-y-6" onSubmit={(e) => handleSave(e)}>
-      {/* Action Buttons */}
-      <div className="flex gap-2">
-        <Button
-          type="button"
-          variant="secondary"
-          className="bg-slate-600 hover:bg-slate-700 text-white gap-2"
-        >
-          <LogIn className="w-4 h-4" />
-          Log In Time
-        </Button>
-        <Button
-          type="button"
-          className="bg-green-500 hover:bg-green-600 text-white gap-2"
-        >
-          <LogOut className="w-4 h-4" />
-          Log Out Time
-        </Button>
-        <Button
-          type="button"
-          className="bg-cyan-500 hover:bg-cyan-600 text-white gap-2"
-        >
-          <Clock className="w-4 h-4" />
-          Both Time
-        </Button>
-      </div>
-
-      {/* Form Fields */}
-      <div className="space-y-4 py-6">
-        <div>
-          <Label htmlFor="employeeName" className="text-sm font-medium mb-1">
-            Emp Name <span className="text-red-500">*</span>
-          </Label>
-          <SearchDropdown
-            placeholder="Enter Employee Name"
-            items={employees.data}
-            onSelect={handleSelect}
-          />
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {/* Action Buttons */}
+        <div className="flex gap-2">
+          <Button variant="secondary" className="bg-slate-600 text-white gap-2">
+            <LogIn className="w-4 h-4" /> Log In Time
+          </Button>
+          <Button className="bg-green-500 text-white gap-2">
+            <LogOut className="w-4 h-4" /> Log Out Time
+          </Button>
+          <Button className="bg-cyan-500 text-white gap-2">
+            <Clock className="w-4 h-4" /> Both Time
+          </Button>
         </div>
 
-        <div className="grid grid-cols-2 gap-2">
-          <div>
-            <Label htmlFor="loginDate" className="text-sm font-medium">
-              Login Date<span className="text-red-500">*</span>
-            </Label>
-            <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  id="date"
-                  className="w-full justify-between"
-                >
-                  {formData.loginDate
-                    ? formData.loginDate.toLocaleDateString()
-                    : "Select date"}
-                  <ChevronDownIcon />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent
-                className="w-auto overflow-hidden p-0"
-                align="start"
-              >
-                <Calendar   
-                  mode="single"
-                  selected={formData.loginDate}
-                  captionLayout="dropdown"
-                  onSelect={() => {
-                    setFormData((prev) => ({
-                      ...prev,
-                      loginDate: new Date(),
-                    }));
-                    setOpen(false);
-                  
-                  }}
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-
-          <div>
-            <Label htmlFor="weekDay" className="text-sm font-medium">
-              Week day
-            </Label>
-            <Input
-              id="weekDay"
-              name="weekDay"
-              placeholder="Week day"
-              value={formData.weekDay}
-              onChange={handleInputChange}
-              className="mt-1"
-              disabled
-            />
-          </div>
-        </div>
-        <div>
-         <Label htmlFor="time-picker" className="px-1">
-          Time
-        </Label>
-        <Input
-          type="time"
-          id="time-picker"
-          step="1"
-          defaultValue="11:00 AM"
-          value={format(formData.loginTime, "p")}
-          onChange={handleInputChange}
-          className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+        {/* Employee Name */}
+        <FormField
+          control={form.control}
+          name="employeeId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Employee Name</FormLabel>
+              <FormControl>
+                {isLoading ? (
+                  <p>Loadiinggg</p>
+                ) : (
+                  <SearchDropdown
+                    placeholder="Enter Employee Name"
+                    items={employees?.data ? employees.data : []}
+                    onSearch={handleSearch}
+                    onSelect={(emp) => field.onChange(emp.id)}
+                  />
+                )}
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
+
+        {/* Login Date */}
+        <FormField
+          control={form.control}
+          name="checkInDate"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Login Date</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-full justify-between">
+                    {field.value
+                      ? field.value.toLocaleDateString()
+                      : "Select date"}
+                    <ChevronDownIcon />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    disabled
+                    mode="single"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                  />
+                </PopoverContent>
+              </Popover>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Login Time */}
+        <FormField
+          control={form.control}
+          name="checkInTime"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Login Time</FormLabel>
+              <FormControl>
+                <Input type="time" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Preferable In Time */}
+        <FormField
+          control={form.control}
+          name="preferableInTime"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Preferable In Time</FormLabel>
+              <FormControl>
+                <Input type="time" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Save Button */}
+        <div className="flex justify-end pt-4 border-t">
+          <Button type="submit" className="bg-green-500 text-white gap-2">
+            💾 Save
+          </Button>
         </div>
-        <div>
-          <Label htmlFor="preferableInTime" className="text-sm font-medium">
-            Preferable In Time
-          </Label>
-          <Input
-            id="preferableInTime"
-            name="preferableInTime"
-            type="time"
-            placeholder="Preferable In Time"
-            value={formData.preferableInTime}
-            onChange={handleInputChange}
-            className="mt-1"
-            
-          />
-        </div>
-        <Button onClick={()=> setFormData(prev => {
-          console.log("hello")
-          return {...prev, loginTime:new Date()}
-        })}>Current Time</Button>
-      </div>
-      {/* Save Button */}
-      <div className="flex justify-end pt-4 border-t">
-        <Button
-          type="submit"
-          className="bg-green-500 hover:bg-green-600 text-white gap-2"
-        >
-          <span>💾</span>
-          Save
-        </Button>
-      </div>
-    </form>
+      </form>
+    </Form>
   );
 }
