@@ -36,6 +36,8 @@ export async function GET(request: NextRequest) {
   }
 }
 
+//fix: ekbar login hoile r hoibo na
+
 export async function POST(req: Request) {
   const attendance: Attendance = await req.json();
 
