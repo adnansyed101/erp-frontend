@@ -1,12 +1,15 @@
 import { prisma } from "@/lib/prisma";
-import { Attendance } from "@/lib/types/attendance.type";
+import {
+  Attendance,
+  AttendanceWithEmployeeData,
+} from "@/lib/types/attendance.type";
 import { formatError } from "@/lib/utils";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const limit = Number(searchParams.get("limit")) || 10;
-  const page = Number(searchParams.get("page"));
+  const page = Number(searchParams.get("page")) || 1;
 
   try {
     const attendances = await prisma.attendance.findMany({
@@ -22,9 +25,12 @@ export async function GET(request: NextRequest) {
       skip: (page - 1) * limit,
     });
 
+    const dataCount = await prisma.attendance.count();
+
     return Response.json({
       success: false,
       data: attendances,
+      totalPages: Math.ceil(dataCount / limit),
       message: "Fetched all attendances.",
     });
   } catch (error) {
@@ -36,17 +42,17 @@ export async function GET(request: NextRequest) {
   }
 }
 
-//fix: ekbar login hoile r hoibo na
-
 export async function POST(req: Request) {
   const attendance: Attendance = await req.json();
+
   try {
     const checkedInEmployee = await prisma.attendance.findFirst({
       where: {
         employeeId: attendance.employeeId,
-        checkIn: "In",
+        status: "In",
       },
     });
+
     if (checkedInEmployee) {
       return Response.json({
         success: false,
@@ -54,6 +60,7 @@ export async function POST(req: Request) {
         message: "Employee already checked in.",
       });
     }
+
     const newClockIn = await prisma.attendance.create({
       data: {
         employeeId: attendance.employeeId,
@@ -76,19 +83,20 @@ export async function POST(req: Request) {
     });
   }
 }
+
 export async function PATCH(req: Request) {
-  const attendance: Attendance = await req.json();
+  const attendance: AttendanceWithEmployeeData = await req.json();
   try {
     const updatedAttendance = await prisma.attendance.update({
       where: {
-        id: attendance.employeeId,
+        id: attendance.id,
       },
       data: {
         checkOut: attendance.checkOut,
         status: attendance.status,
-       // preferableOutTime: attendance.preferableOutTime,
+        // preferableOutTime: attendance.preferableOutTime,
       },
-    }); 
+    });
     return Response.json({
       success: false,
       data: updatedAttendance,
