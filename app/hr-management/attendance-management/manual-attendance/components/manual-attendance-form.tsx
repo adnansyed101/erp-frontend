@@ -71,7 +71,7 @@ export function ManualAttendanceForm() {
 
   // Create new attendance
   const { mutate } = useMutation({
-    mutationKey: ["employees-search"],
+    mutationKey: ["create-attendance"],
     mutationFn: async (newAttendance: Attendance) => {
       const response = await fetch(
         `/api/hr-management/attendance?employeeId=${
@@ -92,11 +92,15 @@ export function ManualAttendanceForm() {
       return response.json();
     },
     onSuccess: (data: ResponseType) => {
-      if (data.success) {
-        queryClient.invalidateQueries({ queryKey: ["attendances-list"] });
-        toast.success("Employee attendance created");
+      if (data.success === true) {
+        queryClient.invalidateQueries({
+          queryKey: ["attendances-list"],
+        });
+        return toast.success(data.message);
+      } else if (data.data === null && data.success === false) {
+        return toast.error(data.message);
       } else {
-        toast.error("Employee already clocked in.");
+        return toast.error(data.message);
       }
     },
     onError: (error) => {
