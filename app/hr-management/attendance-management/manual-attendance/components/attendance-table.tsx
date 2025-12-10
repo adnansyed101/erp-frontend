@@ -15,27 +15,30 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { AttendanceWithEmployeeData } from "@/lib/types/attendance.type";
 import { format } from "date-fns";
+import { useSearchParams } from "next/navigation";
 
 export function AttendanceTable() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [entriesPerPage, setEntriesPerPage] = useState(10);
+  // const [searchTerm, setSearchTerm] = useState("");
+  const [limit, setLimit] = useState(10);
+  const page = useSearchParams();
+
+  console.log(page);
 
   // Get the employees
   const { data: attendances, isLoading } = useQuery({
-    queryKey: ["attendances-list", searchTerm],
+    queryKey: ["attendances-list", limit],
     queryFn: async (): Promise<{
       success: boolean;
       message: string;
       data: AttendanceWithEmployeeData[];
     }> => {
       const response = await fetch(
-        `/api/hr-management/attendance?number=${entriesPerPage}`
+        `/api/hr-management/attendance?limit=${limit}`
       );
       if (!response.ok) throw new Error("Failed to fetch employees");
       return response.json();
     },
   });
-
 
   const handleExcel = () => {
     console.log("Export to Excel");
@@ -60,8 +63,8 @@ export function AttendanceTable() {
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-600">Show</span>
           <select
-            value={entriesPerPage}
-            onChange={(e) => setEntriesPerPage(Number(e.target.value))}
+            value={limit}
+            onChange={(e) => setLimit(Number(e.target.value))}
             className="border rounded px-2 py-1 text-sm"
           >
             <option value={5}>5</option>
@@ -107,8 +110,8 @@ export function AttendanceTable() {
           <Input
             type="text"
             placeholder="Search..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            // value={searchTerm}
+            // onChange={(e) => setSearchTerm(e.target.value)}
             className="w-48"
           />
         </div>
