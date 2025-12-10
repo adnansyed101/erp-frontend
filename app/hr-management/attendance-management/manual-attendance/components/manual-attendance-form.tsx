@@ -71,13 +71,18 @@ export function ManualAttendanceForm() {
   const { mutate } = useMutation({
     mutationKey: ["employees-search"],
     mutationFn: async (newAttendance: Attendance) => {
-      const response = await fetch(`/api/hr-management/attendance`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newAttendance),
-      });
+      const response = await fetch(
+        `/api/hr-management/attendance?employeeId=${
+          form.getValues().employeeId
+        }`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newAttendance),
+        }
+      );
       if (!response.ok) {
         return toast.error("Error occured in creating employee.");
       }
