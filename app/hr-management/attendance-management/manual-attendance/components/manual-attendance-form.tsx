@@ -39,6 +39,12 @@ const attendanceSchema = z.object({
 
 type AttendanceFormData = z.infer<typeof attendanceSchema>;
 
+type ResponseType = {
+  success: boolean;
+  message: string;
+  data: EmployeeWithId[];
+};
+
 export function ManualAttendanceForm() {
   const queryClient = useQueryClient();
   // Create the form
@@ -53,14 +59,10 @@ export function ManualAttendanceForm() {
     },
   });
 
-  // Get the employees
+  // Get the attendances
   const { data: employees, isLoading } = useQuery({
     queryKey: ["employees-search"],
-    queryFn: async (): Promise<{
-      success: boolean;
-      message: string;
-      data: EmployeeWithId[];
-    }> => {
+    queryFn: async (): Promise<ResponseType> => {
       const response = await fetch("/api/hr-management/employees");
       if (!response.ok) throw new Error("Failed to fetch employees");
       return response.json();
@@ -87,14 +89,15 @@ export function ManualAttendanceForm() {
         return toast.error("Error occured in creating employee.");
       }
 
-      return response;
+      return response.json();
     },
-    onSuccess: () => {
-      // Invalidate and refetch queries after a successful mutation
-      queryClient.invalidateQueries({ queryKey: ["attendance"] });
-      queryClient.invalidateQueries({ queryKey: ["attendances-list"] });
-
-      toast.success("Employee attendance created");
+    onSuccess: (data: ResponseType) => {
+      if (data.success) {
+        queryClient.invalidateQueries({ queryKey: ["attendances-list"] });
+        toast.success("Employee attendance created");
+      } else {
+        toast.error("Employee already clocked in.");
+      }
     },
     onError: (error) => {
       alert(`Error creating attendance: ${error.message}`);
