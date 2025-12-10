@@ -140,7 +140,7 @@ export function ManualAttendanceForm() {
               <FormLabel>Employee Name</FormLabel>
               <FormControl>
                 {isLoading ? (
-                  <p>Loadiinggg</p>
+                  <p>Loading...</p>
                 ) : (
                   <SearchDropdown
                     placeholder="Enter Employee Name"
