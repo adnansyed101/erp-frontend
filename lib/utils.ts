@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { parse, set } from "date-fns";
+import qs from "query-string";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -37,7 +38,7 @@ export function formatError(error: any) {
   }
 }
 
-export function formatTime(values: string, today:Date) {
+export function formatTime(values: string, today: Date) {
   const parsedTime = parse(values, "HH:mm", new Date());
 
   const combined = set(today, {
@@ -48,4 +49,27 @@ export function formatTime(values: string, today:Date) {
   });
 
   return combined;
+}
+
+// Form the paginaion links
+export function formUrlQuery({
+  params,
+  key,
+  value,
+}: {
+  params: string;
+  key: string;
+  value: string | null;
+}) {
+  const query = qs.parse(params);
+
+  query[key] = value;
+
+  return qs.stringifyUrl(
+    {
+      url: window.location.pathname,
+      query,
+    },
+    { skipNull: true }
+  );
 }
