@@ -16,13 +16,14 @@ import { useQuery } from "@tanstack/react-query";
 import { AttendanceWithEmployeeData } from "@/lib/types/attendance.type";
 import { format } from "date-fns";
 import { useSearchParams } from "next/navigation";
+import Pagination from "@/components/shared/pagination";
 
 export function AttendanceTable() {
   // const [searchTerm, setSearchTerm] = useState("");
   const [limit, setLimit] = useState(10);
-  const page = useSearchParams();
+  const searchParams = useSearchParams();
 
-  console.log(page);
+  const page = searchParams.get("page") || 1;
 
   // Get the employees
   const { data: attendances, isLoading } = useQuery({
@@ -30,10 +31,11 @@ export function AttendanceTable() {
     queryFn: async (): Promise<{
       success: boolean;
       message: string;
+      totalPages: number;
       data: AttendanceWithEmployeeData[];
     }> => {
       const response = await fetch(
-        `/api/hr-management/attendance?limit=${limit}`
+        `/api/hr-management/attendance?limit=${limit}&page=${page}`
       );
       if (!response.ok) throw new Error("Failed to fetch employees");
       return response.json();
@@ -176,19 +178,12 @@ export function AttendanceTable() {
 
       {/* Pagination */}
       <div className="flex items-center justify-between text-sm text-gray-600">
-        {/* <span>
-          Showing {Math.min(attendances.length, entriesPerPage)} to{" "}
-          {Math.min(attendances.length, entriesPerPage)} of {attendances.length}{" "}
-          entries
-        </span> */}
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" disabled>
-            Previous
-          </Button>
-          <Button variant="outline" size="sm" disabled>
-            Next
-          </Button>
-        </div>
+        {(attendances?.totalPages ?? 0) > 1 && (
+          <Pagination
+            page={Number(page) || 1}
+            totalPages={attendances?.totalPages ?? 0}
+          />
+        )}
       </div>
     </div>
   );
