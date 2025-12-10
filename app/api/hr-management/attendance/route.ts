@@ -35,8 +35,6 @@ export async function GET(request: NextRequest) {
 export async function POST(req: Request) {
   const attendance: Attendance = await req.json();
 
-  console.log(attendance);
-
   try {
     const newClockIn = await prisma.attendance.create({
       data: {
