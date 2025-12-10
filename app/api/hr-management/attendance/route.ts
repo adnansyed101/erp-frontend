@@ -5,6 +5,8 @@ import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
+  const limit = Number(searchParams.get("limit")) || 10;
+  const page = Number(searchParams.get("page"));
 
   try {
     const attendances = await prisma.attendance.findMany({
@@ -15,7 +17,9 @@ export async function GET(request: NextRequest) {
           },
         },
       },
-      take: Number(searchParams.get("number")),
+      orderBy: { createdAt: "desc" },
+      take: limit,
+      skip: (page - 1) * limit,
     });
 
     return Response.json({
