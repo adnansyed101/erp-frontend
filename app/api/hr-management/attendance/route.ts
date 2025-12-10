@@ -40,7 +40,6 @@ export async function GET(request: NextRequest) {
 
 export async function POST(req: Request) {
   const attendance: Attendance = await req.json();
-
   try {
     const checkedInEmployee = await prisma.attendance.findFirst({
       where: {
@@ -55,7 +54,6 @@ export async function POST(req: Request) {
         message: "Employee already checked in.",
       });
     }
-
     const newClockIn = await prisma.attendance.create({
       data: {
         employeeId: attendance.employeeId,
@@ -69,6 +67,32 @@ export async function POST(req: Request) {
       success: false,
       data: newClockIn,
       message: "Created attendance.",
+    });
+  } catch (error) {
+    return Response.json({
+      success: false,
+      data: [],
+      message: formatError(error),
+    });
+  }
+}
+export async function PATCH(req: Request) {
+  const attendance: Attendance = await req.json();
+  try {
+    const updatedAttendance = await prisma.attendance.update({
+      where: {
+        id: attendance.employeeId,
+      },
+      data: {
+        checkOut: attendance.checkOut,
+        status: attendance.status,
+       // preferableOutTime: attendance.preferableOutTime,
+      },
+    }); 
+    return Response.json({
+      success: false,
+      data: updatedAttendance,
+      message: "Updated attendance.",
     });
   } catch (error) {
     return Response.json({
