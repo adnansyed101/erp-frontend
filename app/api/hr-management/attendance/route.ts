@@ -71,7 +71,7 @@ export async function POST(req: Request) {
     });
 
     return Response.json({
-      success: false,
+      success: true,
       data: newClockIn,
       message: "Created attendance.",
     });
