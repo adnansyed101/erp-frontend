@@ -12,33 +12,69 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AttendanceWithEmployeeData } from "@/lib/types/attendance.type";
 import { format } from "date-fns";
 import { useSearchParams } from "next/navigation";
 import Pagination from "@/components/shared/pagination";
+import { toast } from "sonner";
+import { formatId } from "@/lib/utils";
+
+type ResponseType = {
+  success: boolean;
+  message: string;
+  totalPages: number;
+  data: AttendanceWithEmployeeData[];
+};
 
 export function AttendanceTable() {
   // const [searchTerm, setSearchTerm] = useState("");
   const [limit, setLimit] = useState(10);
   const searchParams = useSearchParams();
+  const queryClient = useQueryClient();
 
-  const page = searchParams.get("page") || 1;
+  const page = searchParams.get("page");
 
   // Get the employees
   const { data: attendances, isLoading } = useQuery({
-    queryKey: ["attendances-list", limit],
-    queryFn: async (): Promise<{
-      success: boolean;
-      message: string;
-      totalPages: number;
-      data: AttendanceWithEmployeeData[];
-    }> => {
+    queryKey: ["attendances-list", limit, page],
+    queryFn: async (): Promise<ResponseType> => {
       const response = await fetch(
         `/api/hr-management/attendance?limit=${limit}&page=${page}`
       );
       if (!response.ok) throw new Error("Failed to fetch employees");
       return response.json();
+    },
+  });
+
+  // Create new attendance
+  const { mutate } = useMutation({
+    mutationKey: ["employee-checkout"],
+    mutationFn: async (
+      updateAttendance: Partial<AttendanceWithEmployeeData>
+    ) => {
+      const response = await fetch(
+        `/api/hr-management/attendance?id=${updateAttendance.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updateAttendance),
+        }
+      );
+      if (!response.ok) {
+        return toast.error("Error occured in checking out employee.");
+      }
+
+      return response.json();
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["attendances-list"] });
+      return toast.success(data.message);
+    },
+    onError: (error) => {
+      alert(`Error in checking out attendance: ${error.message}`);
     },
   });
 
@@ -147,7 +183,7 @@ export function AttendanceTable() {
             ) : (
               attendances?.data.map((attendance) => (
                 <TableRow key={attendance.id}>
-                  <TableCell>{attendance.id}</TableCell>
+                  <TableCell>{formatId(attendance.id)}</TableCell>
                   <TableCell>
                     {attendance.employee.personalInformation.fullName}
                   </TableCell>
@@ -160,14 +196,25 @@ export function AttendanceTable() {
                   <TableCell>
                     {format(attendance.checkIn, "dd/mm/yyyy")}
                   </TableCell>
-                  <TableCell>{format(attendance.checkIn, "h:m a")}</TableCell>
+                  <TableCell>{format(attendance.checkIn, "hh:mm a")}</TableCell>
                   <TableCell>
                     {attendance.checkOut
-                      ? format(attendance.checkOut, "h:m a..aa")
+                      ? format(attendance.checkOut, "hh:mm aa")
                       : "In"}
                   </TableCell>
                   <TableCell>
-                    <Button>Check Out</Button>
+                    <Button
+                      disabled={attendance.status === "Out"}
+                      onClick={() => {
+                        mutate({
+                          id: attendance.id,
+                          checkOut: new Date(),
+                          status: "Out",
+                        });
+                      }}
+                    >
+                      Check Out
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))
