@@ -42,6 +42,20 @@ export async function POST(req: Request) {
   const attendance: Attendance = await req.json();
 
   try {
+    const checkedInEmployee = await prisma.attendance.findFirst({
+      where: {
+        employeeId: attendance.employeeId,
+        checkIn: "In",
+      },
+    });
+    if (checkedInEmployee) {
+      return Response.json({
+        success: false,
+        data: null,
+        message: "Employee already checked in.",
+      });
+    }
+
     const newClockIn = await prisma.attendance.create({
       data: {
         employeeId: attendance.employeeId,
